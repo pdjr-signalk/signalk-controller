@@ -1,0 +1,1542 @@
+:root {
+  --dark: #68c;
+  --light: #99f;
+  --textbg: #000;
+  --textfg: #fff;
+  --buttonactive: #aaa; }
+
+#overlay {
+  -webkit-user-drag: element; }
+
+.overlay-fullscreen {
+  width: 100%; }
+
+.widget-container {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  position: relative; }
+
+.widget-scroller-cell {
+  content-align: bottom;
+  position: relative;
+  background: var(--dark); }
+
+.widget-scroller-bar {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  height: 100%;
+  background: var(--light); }
+
+.widget-bg-alarm {
+  background: red; }
+
+.widget-scroller {
+  position: absolute;
+  box-sizing: border-box;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; }
+
+.widget-indicator {
+  background-color: gray !important;
+  width: 10px;
+  height: 5px; }
+
+.relay .widget-indicator-on {
+  background-color: orange !important; }
+
+.switch .widget-indicator-on {
+  background-color: yellow !important; }
+
+.lcars-alarm {
+  background-color: red !important;
+  color: red !important; }
+
+.lcars-flash {
+  animation: blinker 1s linear infinite; }
+
+.lcars-missing-data {
+  color: orange !important;
+  animation: blinker 1s linear infinite; }
+
+.lcars-alarmlo, .lcars-alarmhi {
+  border-bottom: 2px solid red !important; }
+
+.lcars-selected .lcars-label {
+  color: white !important; }
+
+.lcars-p-1 {
+  width: 2px !important; }
+
+.clickfree {
+  pointer-events: none; }
+
+.lcars-label {
+  position: absolute;
+  box-sizing: border-box;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  padding-top: 4px;
+  z-index: 999;
+  pointer-events: none;
+  color: black !important; }
+
+.widget-hgauge {
+  position: absolute;
+  box-sizing: border-box;
+  bottom: 0px;
+  left: 0px;
+  width: 50%;
+  height: 100%;
+  border-right: 2px solid orange;
+  pointer-events: none;
+  z-index: 500; }
+
+.lcars-vbar {
+  position: absolute;
+  box-sizing: border-box;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 50%;
+  border-top: 2px solid orange;
+  pointer-events: none; }
+
+html,
+body {
+  font-family: "arial", monospace;
+  color: #fff; }
+
+h1 {
+  font-size: 270%;
+  font-weight: bold; }
+
+h2 {
+  font-size: 240%;
+  font-weight: bold; }
+
+h3 {
+  font-size: 200%;
+  font-weight: bold; }
+
+h4 {
+  font-size: 180%;
+  font-weight: bold; }
+
+h5 {
+  font-size: 160%;
+  font-weight: bold; }
+
+h6 {
+  font-size: 140%;
+  font-weight: bold; }
+
+.lcars-app-container {
+  display: flex;
+  width: calc(100% - 1rem);
+  height: calc(100% - 1rem);
+  overflow: hidden;
+  margin: 0.5rem; }
+
+.lcars-app-container #left-menu {
+  position: fixed;
+  padding-top: 4.5rem;
+  height: 100%;
+  left: 0.5rem; }
+
+.lcars-app-container #header {
+  position: fixed;
+  background-color: #000;
+  width: calc(100% - 1rem);
+  top: 0;
+  left: 0.5rem;
+  padding-top: 0.5rem;
+  margin-bottom: 0.25rem;
+  z-index: 1; }
+
+.lcars-app-container #footer {
+  position: fixed;
+  background-color: #000;
+  bottom: 0;
+  left: 0.5rem;
+  padding-bottom: 0.5rem;
+  width: calc(100% - 1rem);
+  z-index: 1; }
+
+.lcars-app-container #container {
+  margin-top: 0.25rem;
+  margin-left: 0.25rem;
+  padding-left: 9.5rem;
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
+  width: 100%;
+  height: 100%;
+  overflow: auto; }
+
+.lcars-row {
+  display: inline-flex;
+  flex-direction: row;
+  width: 100%; }
+
+.lcars-row.fill {
+  flex: 1; }
+
+.lcars-row.centered {
+  justify-content: center; }
+
+.lcars-row.full-centered {
+  justify-content: center;
+  align-items: center; }
+
+.lcars-row.right {
+  justify-content: flex-end; }
+
+.lcars-row.right-centered {
+  justify-content: flex-end;
+  align-items: center; }
+
+.lcars-row.right-bottom {
+  justify-content: flex-end;
+  align-items: flex-end; }
+
+.lcars-row :last-child {
+  margin-right: 0; }
+
+.lcars-row > * {
+  margin-right: 0.25rem; }
+
+.lcars-column {
+  display: inline-flex;
+  flex-direction: column; }
+
+.lcars-column.fill {
+  flex: 1; }
+
+.lcars-column.centered {
+  justify-content: center; }
+
+.lcars-column.full-centered {
+  justify-content: center;
+  align-items: center; }
+
+.lcars-column.centered-right {
+  justify-content: center;
+  align-items: flex-end; }
+
+.lcars-column.bottom {
+  justify-content: flex-end; }
+
+.lcars-column.bottom-centered {
+  justify-content: flex-end;
+  align-items: center; }
+
+.lcars-column :last-child {
+  margin-bottom: 0; }
+
+.lcars-column > * {
+  margin-bottom: 0.25rem; }
+
+.lcars-column.left-menu {
+  padding-right: 2rem; }
+
+.lcars-column.right-menu {
+  padding-left: 2rem; }
+
+.lcars-column.start-space {
+  margin-top: 0.25rem; }
+
+.lcars-elbow {
+  position: relative;
+  width: 9.5rem;
+  min-width: 9.5rem;
+  height: 4.5rem;
+  min-height: 4.5rem;
+  background: #fc6;
+  margin: 0; }
+
+.lcars-elbow a {
+  display: inline-block;
+  position: absolute;
+  color: #000;
+  bottom: 0;
+  padding: 0.25rem; }
+
+.lcars-elbow:after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 2rem;
+  height: 3rem;
+  background: #000; }
+
+.lcars-elbow.left-bottom {
+  border-top-left-radius: 3.75rem; }
+
+.lcars-elbow.left-bottom a {
+  right: 2.25rem; }
+
+.lcars-elbow.left-bottom:after {
+  right: 0;
+  top: 1.5rem;
+  border-top-left-radius: 1.875rem; }
+
+.lcars-elbow.left-top {
+  border-bottom-left-radius: 3.75rem; }
+
+.lcars-elbow.left-top a {
+  top: 0;
+  right: 2.25rem; }
+
+.lcars-elbow.left-top:after {
+  right: 0;
+  bottom: 1.5rem;
+  border-bottom-left-radius: 3.75rem; }
+
+.lcars-elbow.right-bottom {
+  border-top-right-radius: 3.75rem; }
+
+.lcars-elbow.right-bottom:after {
+  top: 1.5rem;
+  border-top-right-radius: 1.875rem; }
+
+.lcars-elbow.right-bottom a {
+  left: 2.25rem; }
+
+.lcars-elbow.right-top {
+  border-bottom-right-radius: 3.75rem; }
+
+.lcars-elbow.right-top a {
+  display: inline-block;
+  top: 0;
+  left: 2.25rem; }
+
+.lcars-elbow.right-top:after {
+  bottom: 1.5rem;
+  border-bottom-right-radius: 1.875rem; }
+
+.lcars-bar {
+  position: relative;
+  color: #000;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  display: inline-block;
+  background-color: var(--dark);
+  text-align: center;
+  color: white;
+  font-weight: bold; }
+
+.lcars-bar:after {
+  content: '';
+  display: block;
+  position: absolute;
+  background: #000; }
+
+.lcars-bar.spacer {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  width: 0.25rem;
+  min-width: 0.25rem;
+  height: 0.25rem;
+  min-height: 0.25rem; }
+
+.lcars-bar.double-spacer {
+  background-color: transparent;
+  width: 0.5rem;
+  min-width: 0.5rem;
+  height: 0.5rem;
+  min-height: 0.5rem; }
+
+.lcars-bar.left-space {
+  margin-left: 0.25rem; }
+
+.lcars-bar.left-double-space {
+  margin-left: 0.5rem; }
+
+.lcars-bar.right-space {
+  margin-right: 0.25rem; }
+
+.lcars-bar.right-double-space {
+  margin-right: 0.5rem; }
+
+.lcars-bar.horizontal {
+  height: 1.5rem; }
+
+.lcars-bar.left-end {
+  width: 1.5rem;
+  max-width: 1.5rem;
+  min-width: 1.5rem;
+  border-top-left-radius: 0.75rem;
+  border-bottom-left-radius: 0.75rem; }
+
+.lcars-bar.left-end.decorated:after {
+  right: 0.25rem;
+  width: 0.25rem;
+  height: 100%;
+  background-color: var(--textbg); }
+
+.lcars-bar.right-end {
+  width: 1.5rem;
+  max-width: 1.5rem;
+  min-width: 1.5rem;
+  border-top-right-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem; }
+
+.lcars-bar.right-end.decorated:after {
+  left: 0.25rem;
+  width: 0.25rem;
+  height: 100%;
+  background-color: var(--textbg); }
+
+.lcars-bar.fill {
+  flex: 1; }
+
+.lcars-bar.bottom {
+  align-self: flex-end; }
+
+.lcars-bar .lcars-title-small {
+  color: #fff;
+  background-color: var(--textbg);
+  text-transform: uppercase;
+  margin: 0;
+  margin-top: 0.16666666666667rem;
+  padding-left: 0.166666666666667rem;
+  padding-right: 0.166666666666667rem;
+  padding-bottom: 0.166666666666667rem;
+  display: inline-block;
+  font-size: 100%;
+  height: 100%; }
+
+.lcars-bar .lcars-title {
+  color: #fff;
+  background-color: var(--textbg);
+  text-transform: uppercase;
+  margin: 0;
+  margin-left: 0.833333333333335rem;
+  padding-left: 0.166666666666667rem;
+  padding-right: 0.166666666666667rem;
+  padding-bottom: 0.166666666666667rem;
+  display: inline-block;
+  font-size: 150%;
+  height: 100%; }
+
+.lcars-bar .lcars-title.right {
+  float: right;
+  margin-right: 0.833333333333335rem; }
+
+.lcars-element {
+  position: relative;
+  font-weight: bold;
+  color: var(--textbg);
+  text-align: right;
+  background: #fc6;
+  height: 3rem;
+  width: 7.5rem;
+  box-sizing: border-box;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end; }
+
+.lcars-element * {
+  margin: 0; }
+
+.lcars-element.left-rounded {
+  border-top-left-radius: 1.5rem;
+  border-bottom-left-radius: 1.5rem;
+  padding-left: 1.5rem; }
+
+.lcars-element.right-rounded {
+  border-top-right-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+  padding-right: 1.5rem; }
+
+.lcars-element.rounded {
+  border-radius: 1.5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem; }
+
+.lcars-element.button {
+  cursor: pointer; }
+
+.lcars-element.button:active {
+  background-color: var(--buttonactive); }
+
+.lcars-element .lcars-element-addition {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  background-color: var(--textbg);
+  color: var(--textfg);
+  font-size: 2.000000000000001rem;
+  margin-left: 0.25rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem; }
+
+.lcars-element .lcars-element-decorator {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  width: 2rem;
+  left: -2.25rem;
+  height: 100%;
+  background-color: var(--light);
+  border-top-left-radius: 1.5rem;
+  border-bottom-left-radius: 1.5rem; }
+
+.lcars-element .lcars-element-decorator:after {
+  content: '';
+  display: block;
+  position: absolute;
+  right: 0.25rem;
+  width: 0.25rem;
+  height: 100%;
+  background-color: var(--textbg); }
+
+.lcars-element .lcars-element-decorator.right {
+  right: -2.25rem;
+  left: unset;
+  border-top-right-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0; }
+
+.lcars-element .lcars-element-decorator.right:after {
+  left: 0.25rem;
+  right: unset; }
+
+.lcars-text-box,
+a.lcars-text-box {
+  background-color: var(--textbg);
+  color: var(--textfg);
+  font-weight: bold;
+  width: 7.5rem;
+  height: 1.5rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-direction: row; }
+
+.lcars-text-box.med,
+a.lcars-text-box.med {
+  font-size: 120%; }
+
+.lcars-text-box.big,
+a.lcars-text-box.big {
+  font-size: 150%; }
+
+.lcars-text-box.large,
+a.lcars-text-box.large {
+  font-size: 200%; }
+
+.lcars-text-box.huge,
+a.lcars-text-box.huge {
+  font-size: 400%;
+  height: 6rem; }
+
+.lcars-text-box.centered,
+a.lcars-text-box.centered {
+  justify-content: center; }
+
+.lcars-text-box.right,
+a.lcars-text-box.right {
+  justify-content: flex-end; }
+
+.lcars-text-box.full-centered,
+a.lcars-text-box.full-centered {
+  justify-content: center;
+  align-items: center; }
+
+.lcars-text-box.centered-right,
+a.lcars-text-box.centered-right {
+  justify-content: flex-end;
+  align-items: center; }
+
+.lcars-text-box.bottom,
+a.lcars-text-box.bottom {
+  align-items: flex-end; }
+
+.lcars-text-box.bottom-centered,
+a.lcars-text-box.bottom-centered {
+  justify-content: center;
+  align-items: flex-end; }
+
+.lcars-text-box.bottom-right,
+a.lcars-text-box.bottom-right {
+  justify-content: flex-end;
+  align-items: flex-end; }
+
+.lcars-text-box.blink,
+a.lcars-text-box.blink {
+  animation: blinker 1s linear infinite; }
+
+@-moz-keyframes blinker {
+  50% {
+    opacity: 0.4; } }
+@-webkit-keyframes blinker {
+  50% {
+    opacity: 0.4; } }
+@-o-keyframes blinker {
+  50% {
+    opacity: 0.4; } }
+@keyframes blinker {
+  50% {
+    opacity: 0.4; } }
+.lcars-bracket {
+  background-color: var(--dark); }
+
+.lcars-bracket.left {
+  width: 1.5rem;
+  border-top-left-radius: 1.5rem;
+  border-bottom-left-radius: 1.5rem;
+  border-width: 0.75rem 0 0.75rem 0.25rem; }
+
+.lcars-bracket.right {
+  width: 1.5rem;
+  border-top-right-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+  border-width: 0.75rem 0.25rem 0.75rem 0; }
+
+.lcars-bracket.top {
+  height: 1.5rem;
+  border-top-left-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
+  border-width: 0.25rem 0.75rem 0 0.75rem; }
+
+.lcars-bracket.bottom {
+  height: 1.5rem;
+  border-bottom-left-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+  border-width: 0 0.75rem 0.25rem 0.75rem; }
+
+.lcars-bracket.hollow {
+  background-color: #000;
+  border-style: solid;
+  border-color: var(--dark); }
+
+.lcars-u-1-1 {
+  width: 7.5rem;
+  min-width: 7.5rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-1-2 {
+  width: 7.5rem;
+  min-width: 7.5rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-1-3 {
+  width: 7.5rem;
+  min-width: 7.5rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-1-4 {
+  width: 7.5rem;
+  min-width: 7.5rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-1-5 {
+  width: 7.5rem;
+  min-width: 7.5rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-1-6 {
+  width: 7.5rem;
+  min-width: 7.5rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-1-7 {
+  width: 7.5rem;
+  min-width: 7.5rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-1-8 {
+  width: 7.5rem;
+  min-width: 7.5rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-u-2-1 {
+  width: 15rem;
+  min-width: 15rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-2-2 {
+  width: 15rem;
+  min-width: 15rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-2-3 {
+  width: 15rem;
+  min-width: 15rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-2-4 {
+  width: 15rem;
+  min-width: 15rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-2-5 {
+  width: 15rem;
+  min-width: 15rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-2-6 {
+  width: 15rem;
+  min-width: 15rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-2-7 {
+  width: 15rem;
+  min-width: 15rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-2-8 {
+  width: 15rem;
+  min-width: 15rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-u-3-1 {
+  width: 22.5rem;
+  min-width: 22.5rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-3-2 {
+  width: 22.5rem;
+  min-width: 22.5rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-3-3 {
+  width: 22.5rem;
+  min-width: 22.5rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-3-4 {
+  width: 22.5rem;
+  min-width: 22.5rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-3-5 {
+  width: 22.5rem;
+  min-width: 22.5rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-3-6 {
+  width: 22.5rem;
+  min-width: 22.5rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-3-7 {
+  width: 22.5rem;
+  min-width: 22.5rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-3-8 {
+  width: 22.5rem;
+  min-width: 22.5rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-u-4-1 {
+  width: 30rem;
+  min-width: 30rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-4-2 {
+  width: 30rem;
+  min-width: 30rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-4-3 {
+  width: 30rem;
+  min-width: 30rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-4-4 {
+  width: 30rem;
+  min-width: 30rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-4-5 {
+  width: 30rem;
+  min-width: 30rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-4-6 {
+  width: 30rem;
+  min-width: 30rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-4-7 {
+  width: 30rem;
+  min-width: 30rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-4-8 {
+  width: 30rem;
+  min-width: 30rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-u-5-1 {
+  width: 37.5rem;
+  min-width: 37.5rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-5-2 {
+  width: 37.5rem;
+  min-width: 37.5rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-5-3 {
+  width: 37.5rem;
+  min-width: 37.5rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-5-4 {
+  width: 37.5rem;
+  min-width: 37.5rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-5-5 {
+  width: 37.5rem;
+  min-width: 37.5rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-5-6 {
+  width: 37.5rem;
+  min-width: 37.5rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-5-7 {
+  width: 37.5rem;
+  min-width: 37.5rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-5-8 {
+  width: 37.5rem;
+  min-width: 37.5rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-u-6-1 {
+  width: 45rem;
+  min-width: 45rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-6-2 {
+  width: 45rem;
+  min-width: 45rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-6-3 {
+  width: 45rem;
+  min-width: 45rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-6-4 {
+  width: 45rem;
+  min-width: 45rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-6-5 {
+  width: 45rem;
+  min-width: 45rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-6-6 {
+  width: 45rem;
+  min-width: 45rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-6-7 {
+  width: 45rem;
+  min-width: 45rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-6-8 {
+  width: 45rem;
+  min-width: 45rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-u-7-1 {
+  width: 52.5rem;
+  min-width: 52.5rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-7-2 {
+  width: 52.5rem;
+  min-width: 52.5rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-7-3 {
+  width: 52.5rem;
+  min-width: 52.5rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-7-4 {
+  width: 52.5rem;
+  min-width: 52.5rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-7-5 {
+  width: 52.5rem;
+  min-width: 52.5rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-7-6 {
+  width: 52.5rem;
+  min-width: 52.5rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-7-7 {
+  width: 52.5rem;
+  min-width: 52.5rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-7-8 {
+  width: 52.5rem;
+  min-width: 52.5rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-u-8-1 {
+  width: 60rem;
+  min-width: 60rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-8-2 {
+  width: 60rem;
+  min-width: 60rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-8-3 {
+  width: 60rem;
+  min-width: 60rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-8-4 {
+  width: 60rem;
+  min-width: 60rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-8-5 {
+  width: 60rem;
+  min-width: 60rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-8-6 {
+  width: 60rem;
+  min-width: 60rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-8-7 {
+  width: 60rem;
+  min-width: 60rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-8-8 {
+  width: 60rem;
+  min-width: 60rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-u-9-1 {
+  width: 67.5rem;
+  min-width: 67.5rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-9-2 {
+  width: 67.5rem;
+  min-width: 67.5rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-9-3 {
+  width: 67.5rem;
+  min-width: 67.5rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-9-4 {
+  width: 67.5rem;
+  min-width: 67.5rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-9-5 {
+  width: 67.5rem;
+  min-width: 67.5rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-9-6 {
+  width: 67.5rem;
+  min-width: 67.5rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-9-7 {
+  width: 67.5rem;
+  min-width: 67.5rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-9-8 {
+  width: 67.5rem;
+  min-width: 67.5rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-u-10-1 {
+  width: 75rem;
+  min-width: 75rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-10-2 {
+  width: 75rem;
+  min-width: 75rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-10-3 {
+  width: 75rem;
+  min-width: 75rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-10-4 {
+  width: 75rem;
+  min-width: 75rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-10-5 {
+  width: 75rem;
+  min-width: 75rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-10-6 {
+  width: 75rem;
+  min-width: 75rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-10-7 {
+  width: 75rem;
+  min-width: 75rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-10-8 {
+  width: 75rem;
+  min-width: 75rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-u-11-1 {
+  width: 82.5rem;
+  min-width: 82.5rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-11-2 {
+  width: 82.5rem;
+  min-width: 82.5rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-11-3 {
+  width: 82.5rem;
+  min-width: 82.5rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-11-4 {
+  width: 82.5rem;
+  min-width: 82.5rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-11-5 {
+  width: 82.5rem;
+  min-width: 82.5rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-11-6 {
+  width: 82.5rem;
+  min-width: 82.5rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-11-7 {
+  width: 82.5rem;
+  min-width: 82.5rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-11-8 {
+  width: 82.5rem;
+  min-width: 82.5rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-u-12-1 {
+  width: 90rem;
+  min-width: 90rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-12-2 {
+  width: 90rem;
+  min-width: 90rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-12-3 {
+  width: 90rem;
+  min-width: 90rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-12-4 {
+  width: 90rem;
+  min-width: 90rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-12-5 {
+  width: 90rem;
+  min-width: 90rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-12-6 {
+  width: 90rem;
+  min-width: 90rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-12-7 {
+  width: 90rem;
+  min-width: 90rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-12-8 {
+  width: 90rem;
+  min-width: 90rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-u-13-1 {
+  width: 97.5rem;
+  min-width: 97.5rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-13-2 {
+  width: 97.5rem;
+  min-width: 97.5rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-13-3 {
+  width: 97.5rem;
+  min-width: 97.5rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-13-4 {
+  width: 97.5rem;
+  min-width: 97.5rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-13-5 {
+  width: 97.5rem;
+  min-width: 97.5rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-13-6 {
+  width: 97.5rem;
+  min-width: 97.5rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-13-7 {
+  width: 97.5rem;
+  min-width: 97.5rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-13-8 {
+  width: 97.5rem;
+  min-width: 97.5rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-u-14-1 {
+  width: 105rem;
+  min-width: 105rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-14-2 {
+  width: 105rem;
+  min-width: 105rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-14-3 {
+  width: 105rem;
+  min-width: 105rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-14-4 {
+  width: 105rem;
+  min-width: 105rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-14-5 {
+  width: 105rem;
+  min-width: 105rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-14-6 {
+  width: 105rem;
+  min-width: 105rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-14-7 {
+  width: 105rem;
+  min-width: 105rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-14-8 {
+  width: 105rem;
+  min-width: 105rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-u-15-1 {
+  width: 112.5rem;
+  min-width: 112.5rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-15-2 {
+  width: 112.5rem;
+  min-width: 112.5rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-15-3 {
+  width: 112.5rem;
+  min-width: 112.5rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-15-4 {
+  width: 112.5rem;
+  min-width: 112.5rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-15-5 {
+  width: 112.5rem;
+  min-width: 112.5rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-15-6 {
+  width: 112.5rem;
+  min-width: 112.5rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-15-7 {
+  width: 112.5rem;
+  min-width: 112.5rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-15-8 {
+  width: 112.5rem;
+  min-width: 112.5rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-u-16-1 {
+  width: 120rem;
+  min-width: 120rem;
+  height: 3rem;
+  min-height: 3rem; }
+
+.lcars-u-16-2 {
+  width: 120rem;
+  min-width: 120rem;
+  height: 6rem;
+  min-height: 6rem; }
+
+.lcars-u-16-3 {
+  width: 120rem;
+  min-width: 120rem;
+  height: 9rem;
+  min-height: 9rem; }
+
+.lcars-u-16-4 {
+  width: 120rem;
+  min-width: 120rem;
+  height: 12rem;
+  min-height: 12rem; }
+
+.lcars-u-16-5 {
+  width: 120rem;
+  min-width: 120rem;
+  height: 15rem;
+  min-height: 15rem; }
+
+.lcars-u-16-6 {
+  width: 120rem;
+  min-width: 120rem;
+  height: 18rem;
+  min-height: 18rem; }
+
+.lcars-u-16-7 {
+  width: 120rem;
+  min-width: 120rem;
+  height: 21rem;
+  min-height: 21rem; }
+
+.lcars-u-16-8 {
+  width: 120rem;
+  min-width: 120rem;
+  height: 24rem;
+  min-height: 24rem; }
+
+.lcars-vu-1 {
+  height: 3rem; }
+
+.lcars-u-1 {
+  width: 7.5rem; }
+
+.lcars-u-1.half {
+  width: 3.75rem; }
+
+.lcars-vu-2 {
+  height: 6rem; }
+
+.lcars-u-2 {
+  width: 15rem; }
+
+.lcars-u-2.half {
+  width: 11.25rem; }
+
+.lcars-vu-3 {
+  height: 9rem; }
+
+.lcars-u-3 {
+  width: 22.5rem; }
+
+.lcars-u-3.half {
+  width: 18.75rem; }
+
+.lcars-vu-4 {
+  height: 12rem; }
+
+.lcars-u-4 {
+  width: 30rem; }
+
+.lcars-u-4.half {
+  width: 26.25rem; }
+
+.lcars-vu-5 {
+  height: 15rem; }
+
+.lcars-u-5 {
+  width: 37.5rem; }
+
+.lcars-u-5.half {
+  width: 33.75rem; }
+
+.lcars-vu-6 {
+  height: 18rem; }
+
+.lcars-u-6 {
+  width: 45rem; }
+
+.lcars-u-6.half {
+  width: 41.25rem; }
+
+.lcars-vu-7 {
+  height: 21rem; }
+
+.lcars-u-7 {
+  width: 52.5rem; }
+
+.lcars-u-7.half {
+  width: 48.75rem; }
+
+.lcars-vu-8 {
+  height: 24rem; }
+
+.lcars-u-8 {
+  width: 60rem; }
+
+.lcars-u-8.half {
+  width: 56.25rem; }
+
+.lcars-vu-9 {
+  height: 27rem; }
+
+.lcars-u-9 {
+  width: 67.5rem; }
+
+.lcars-u-9.half {
+  width: 63.75rem; }
+
+.lcars-vu-10 {
+  height: 30rem; }
+
+.lcars-u-10 {
+  width: 75rem; }
+
+.lcars-u-10.half {
+  width: 71.25rem; }
+
+.lcars-vu-11 {
+  height: 33rem; }
+
+.lcars-u-11 {
+  width: 82.5rem; }
+
+.lcars-u-11.half {
+  width: 78.75rem; }
+
+.lcars-vu-12 {
+  height: 36rem; }
+
+.lcars-u-12 {
+  width: 90rem; }
+
+.lcars-u-12.half {
+  width: 86.25rem; }
+
+.lcars-vu-13 {
+  height: 39rem; }
+
+.lcars-u-13 {
+  width: 97.5rem; }
+
+.lcars-u-13.half {
+  width: 93.75rem; }
+
+.lcars-vu-14 {
+  height: 42rem; }
+
+.lcars-u-14 {
+  width: 105rem; }
+
+.lcars-u-14.half {
+  width: 101.25rem; }
+
+.lcars-vu-15 {
+  height: 45rem; }
+
+.lcars-u-15 {
+  width: 112.5rem; }
+
+.lcars-u-15.half {
+  width: 108.75rem; }
+
+.lcars-vu-16 {
+  height: 48rem; }
+
+.lcars-u-16 {
+  width: 120rem; }
+
+.lcars-u-16.half {
+  width: 116.25rem; }
+
+/*# sourceMappingURL=output.css.map */

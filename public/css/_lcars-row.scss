@@ -1,0 +1,32 @@
+.lcars-row {
+	display: inline-flex;
+	flex-direction: row;
+	width: 100%;
+}
+.lcars-row.fill {
+	flex: 1;
+}
+.lcars-row.centered {
+	justify-content: center;
+}
+.lcars-row.full-centered {
+	justify-content: center;
+	align-items: center;
+}
+.lcars-row.right {
+	justify-content: flex-end;
+}
+.lcars-row.right-centered {
+	justify-content: flex-end;
+	align-items: center;
+}
+.lcars-row.right-bottom {
+	justify-content: flex-end;
+	align-items: flex-end;
+}
+.lcars-row :last-child {
+	margin-right: 0;
+}
+.lcars-row > * {
+	margin-right: 0rem;
+}

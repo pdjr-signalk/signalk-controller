@@ -1,0 +1,37 @@
+$base-width: 7.5rem;
+$base-height: 3rem;
+
+@for $w from 1 through 16 {
+    @for $h from 1 through 8 {
+        .lcars-u-#{$w}-#{$h} {
+            width: $base-width * $w;
+            min-width: $base-width * $w;
+            height: $base-height * $h;
+            min-height: $base-height * $h;
+        }
+        .lcars-u-#{$w}-#{$h}-half {
+            width: $base-width * $w;
+            min-width: $base-width * $w;
+            height: $base-height * ($h + 0.5);
+            min-height: $base-height * ($h + 0.5);
+        }
+        .lcars-vu-#{$h} {
+            width: $base-height * $h;
+        }
+        .lcars-vu-#{$h}-half {
+            width: $base-height * ($h + 0.5);
+        }
+    }
+    .lcars-u-#{$w} {
+        width: $base-width * $w;
+        min-width: $base-width * $w;
+    }
+    .lcars-u-#{$w}-half {
+        width: $base-width * ($w + 0.5);
+        min-width: $base-width * ($w + 0.5);
+    }
+}
+.lcars-u-0-half {
+    width: $base-width * 0.5;
+    min-width: $base-width * 0.5;
+}

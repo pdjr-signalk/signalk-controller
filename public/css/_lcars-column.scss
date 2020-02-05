@@ -1,0 +1,40 @@
+.lcars-column {
+	display: inline-flex;
+	flex-direction: column;
+}
+.lcars-column.fill {
+	flex: 1;
+}
+.lcars-column.centered {
+	justify-content: center;
+}
+.lcars-column.full-centered {
+	justify-content: center;
+	align-items: center;
+}
+.lcars-column.centered-right {
+	justify-content: center;
+	align-items: flex-end;
+}
+.lcars-column.bottom {
+	justify-content: flex-end;
+}
+.lcars-column.bottom-centered {
+	justify-content: flex-end;
+	align-items: center;
+}
+.lcars-column :last-child {
+	margin-bottom: 0;
+}
+.lcars-column > * {
+	margin-bottom: 0.25rem;
+}
+.lcars-column.left-menu {
+	padding-right: 2rem;
+}
+.lcars-column.right-menu {
+	padding-left: 2rem;
+}
+.lcars-column.start-space {
+	margin-top: 0.25rem;
+}

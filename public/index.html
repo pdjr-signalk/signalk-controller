@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<script type="text/javascript" src="lib/drag.js"></script>
+	<script type="text/javascript" src="lib/functions.js"></script>
+	<script type="text/javascript" src="lib/utils.js"></script>
+	<script type="text/javascript" src="lib/widget.js"></script>
+	<script type="text/javascript" src="lib/script.js"></script>
+    	<script src='lib/@fullcalendar/core/main.js'></script>
+    	<script src='lib/@fullcalendar/daygrid/main.js'></script>
+    	<script src='lib/@fullcalendar/timegrid/main.js'></script>
+    	<script src='lib/@fullcalendar/interaction/main.js'></script>
+
+	<link rel="stylesheet" type="text/css" href="css/lcars.css">
+    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/core/main.css' />
+    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/daygrid/main.css' />
+    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/timegrid/main.css' />
+    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/bootstrap/main.css' />
+
+	<title>signalk-panel</title>
+    <style>
+        html, body {
+            background: black
+        }
+        p, h1, h2, h3 {
+            margin-top: 1em;
+        }
+        pre {
+            display: inline;
+            white-space: pre-line;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body onload="init();">
+    <div class="lcars-app-container">
+
+        <!-- HEADER ==================================================== -->
+
+        <div id="header" class="lcars-row header">
+            <div class="lcars-elbow left-bottom"></div>
+            <div class="lcars-bar horizontal lcars-p-1"></div>
+            <div class="lcars-bar horizontal lcars-p-1"></div>
+            <div class="lcars-bar horizontal lcars-p-1"></div>
+            <div class="lcars-bar horizontal lcars-p-1"></div>
+            <div class="lcars-bar fill horizontal both-divider"></div>
+            <div class="lcars-bar horizontal">
+                <div class="lcars-title right">
+                    <span id="vesselName">
+                        ---
+                    </span>
+                </div>
+            </div>
+            <div class="lcars-bar horizontal right-end decorated"></div>
+        </div>
+
+        <!-- SIDE MENU ================================================= -->
+
+        <div id="left-menu" class="lcars-column start-space lcars-u-1">
+            <div data-include="includes/datetime.html"></div>
+            <div class="lcars-bar lcars-u-1-1"></div>
+            <div data-include="includes/heating-channel.html"></div>
+            <div class="lcars-bar lcars-u-1-1"></div>
+            <div class="lcars-bar lcars-u-1-1"></div>
+            <div class="lcars-bar lcars-u-1-1"></div>
+            <div class="lcars-bar"></div>
+        </div>
+
+        <!-- FOOTER ==================================================== -->
+
+        <div id="footer" class="lcars-row footer">
+            <div class="lcars-elbow left-top"></div>
+            <div class="lcars-bar horizontal bottom lcars-p-1"></div>
+            <div class="lcars-bar horizontal bottom lcars-p-1"></div>
+            <div class="lcars-bar horizontal bottom lcars-p-1"></div>
+            <div class="lcars-bar horizontal bottom lcars-p-1"></div>
+            <div class="lcars-bar horizontal bottom lcars-p-1"></div>
+            <div data-include="includes/notification.html"></div>
+            <div class="lcars-bar horizontal right-end left-divider bottom"></div>
+        </div>
+
+        <!-- MAIN CONTAINER ============================================ -->
+
+        <div id="container" style="overflow: hidden;">
+            <!-- COLUMN LAYOUT -->
+            <div class="lcars-column">
+		<div id="programmer">
+    			<div id="calendar" style="width: 100%; height: 600px;">
+    			</div>
+		</div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
+

@@ -1,0 +1,9 @@
+<!-- BATTERY CHARGER POWER -->
+<div class="lcars-bar lcars-u-1 horizontal both-divider button" style="position:relative;"
+     data-button='{ "function": "toggleOverlay", "params": { "overlay": "overlay-sensorlog.html", "function": "displaySensorLog", "params": { "group": "acpower", "chart": "day" } } }'>
+    <div id="E04" class="lcars-label"
+         data-source='{ "signalk": "electrical.chargers.257.power" }'
+         data-widget-digital='{ "function": "multiplier,0.001,1" }'>
+        BAT ---kW
+    </div>
+</div>

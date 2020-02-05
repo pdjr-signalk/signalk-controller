@@ -1,0 +1,15 @@
+<div id="rudder" class="lcars-row">
+    <div class="lcars-element left-rounded lcars-u-1-1">
+        <div class="lcars-element-addition"
+             data-source='{ "signalk": "steering.rudderAngle" }'
+             data-widget-digital='{ "function": "rudderAngle,0" }'>
+             ---
+        </div>
+    </div>
+    <div class="lcars-element lcars-u-4">
+        <div data-source='{ "signalk":"steering.rudderAngle" }'
+             data-widget-hgauge='{ "range": { "min": -50, "max": 50 }, "grid": 16, "cursor1": { "color": "orange", "function": "rudderPercent,-50,50" } }'>
+        </div>
+    </div>
+    <div class="lcars-element button right-rounded lcars-u-1">Rudder / &deg;</div>
+</div>
