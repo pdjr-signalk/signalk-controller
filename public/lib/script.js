@@ -6,7 +6,7 @@ const DEBUG = false;
 function init() {
     // Stop the browser from displaying the right-click context menu.
     document.addEventListener("contextmenu", (e) => { contextHandler(e); e.preventDefault(); });
-    window.event.cancelBubble = true;
+    //window.event.cancelBubble = true;
 
     // Process "<div data-include=" tags by interpolating HTML fragments into page.
     interpolate();

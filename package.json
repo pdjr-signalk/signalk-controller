@@ -1,0 +1,25 @@
+{
+  "name": "signalk-controller",
+  "version": "1.0.0",
+  "description": "Signal K environmental controller",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/preeve9534/signalk-controller.git"
+  },
+  "keywords": [
+    "signalk-webapp",
+    "controller"
+  ],
+  "author": "Paul Reeve <paul@pdjr.eu>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/preeve9534/signalk-controller/issues"
+  },
+  "homepage": "https://github.com/preeve9534/signalk-controller#readme",
+  "dependencies": {
+    "optimist": "^0.6.1"
+  }
+}

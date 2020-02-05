@@ -1,0 +1,56 @@
+@import 'theme';
+@import 'animations';
+@import 'lcars';
+@import 'widget';
+@import 'alert-editor';
+@import 'table';
+
+html, body {
+    background: black;
+    color: white;
+    font-family: "arial", monospace;
+    height: 100%;
+    overflow: hidden;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+    margin-top: 1em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+}
+
+pre {
+    display: inline;
+    white-space: pre-line;
+    word-wrap: break-word;
+}
+
+h1 {
+  font-size: 270%;
+}
+
+h2 {
+  font-size: 240%;
+}
+
+h3 {
+  font-size: 200%;
+}
+
+h4 {
+  font-size: 180%;
+}
+
+h5 {
+  font-size: 160%;
+}
+
+h6 {
+  font-size: 140%;
+}
+
+.hidden {
+    display: none;
+}

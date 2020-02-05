@@ -1,0 +1,38 @@
+.table {
+    display: table;
+    table-layout: auto;
+    width: 100%;
+}
+.table.fixed {
+    table-layout: fixed;
+}
+
+.table-header-group {
+    display: table-header-group;
+    font-weight: bold;
+}
+
+.table-row-group {
+    display: table-row-group;
+}
+
+.table-row {
+    display: table-row;
+}
+
+.table-cell {
+    display: table-cell;
+    padding: 0.15em 0.5em 0.15em 0.5em;
+    position: relative;
+}
+.table.compact .table-cell {
+    padding: 2px 0px 2px 0px;
+}
+
+.table-cell.widget-indicator {
+    padding: 2px;
+}
+
+.table-caption {
+    display: table-caption;
+}

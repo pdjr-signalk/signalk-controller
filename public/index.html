@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>Environment controller</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<script type="text/javascript" src="lib/drag.js"></script>
-	<script type="text/javascript" src="lib/functions.js"></script>
-	<script type="text/javascript" src="lib/utils.js"></script>
-	<script type="text/javascript" src="lib/widget.js"></script>
-	<script type="text/javascript" src="lib/script.js"></script>
-    	<script src='lib/@fullcalendar/core/main.js'></script>
-    	<script src='lib/@fullcalendar/daygrid/main.js'></script>
-    	<script src='lib/@fullcalendar/timegrid/main.js'></script>
-    	<script src='lib/@fullcalendar/interaction/main.js'></script>
 
+	<script type="text/javascript" src="lib/SignalK.js"></script>
+	<script type="text/javascript" src="lib/PageUtils.js"></script>
+	<script type="text/javascript" src="lib/FunctionFactory.js"></script>
+	<script type="text/javascript" src="lib/StructuredStorage.js"></script>
+	<script type="text/javascript" src="lib/Controller.js"></script>
+
+   	<script src='lib/@fullcalendar/core/main.js'></script>
+   	<script src='lib/@fullcalendar/daygrid/main.js'></script>
+   	<script src='lib/@fullcalendar/timegrid/main.js'></script>
+   	<script src='lib/@fullcalendar/interaction/main.js'></script>
+
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<link rel="stylesheet" type="text/css" href="css/lcars.css">
-    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/core/main.css' />
-    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/daygrid/main.css' />
-    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/timegrid/main.css' />
-    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/bootstrap/main.css' />
+   	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/core/main.css' />
+   	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/daygrid/main.css' />
+   	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/timegrid/main.css' />
+   	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/bootstrap/main.css' />
 
-	<title>signalk-panel</title>
     <style>
         html, body {
             background: black
@@ -31,9 +34,61 @@
             white-space: pre-line;
             word-wrap: break-word;
         }
+        .channel-button-group {
+            width: 100% !important;
+        }
+    
+        .channel-button {
+            width: 100% !important;
+            height: 40px;
+            background: grey;
+        }
+        .ch { background: #ff7f7f; opacity: 0.5;}
+        .hw { background: #7f7fff; opacity: 0.5;}
+        .re { background: #ffff7f; opacity: 0.5;}
+        .rd { background: #ff7fff; opacity: 0.5;}
+        .channel-button-group .on { opacity: 1; }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var events = [];
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                plugins: ['timeGrid', 'interaction'],
+                events: [],
+                selectable: true,
+                unselectAuto: false,
+                defaultView: 'timeGridWeek',
+                themeSystem: 'bootstrap',
+                header: { left: 'prev,next today', center: '', right: 'timeGridWeek' },
+                displayEventTime: false,
+                allDaySlot: false,
+                slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false, omitZeroMinute: false, meridiem: 'false' },
+                columnHeaderFormat: { weekday: 'short' },
+                dateClick: function(info) { alert('clicked ' + info.dateStr + ' on resource ' + info.resource.id); },
+                select: function(info) {
+                    var background = window.controller.getChannel();
+                    console.log(background);
+                    calendar.addEvent({
+                        start: info.startStr,
+                        end: info.endStr,
+                        backgroundColor: background
+                    })
+                },
+                eventClick: function(info) { info.event.remove(); }
+            });
+
+            calendar.render();
+        });
+
+        function noRightClick(contextHandler) {
+            document.addEventListener("contextmenu", (e) => { e.preventDefault(); });
+            window.event.cancelBubble = true;
+        }
+    </script>
 </head>
-<body onload="init();">
+<body onload="noRightClick(); controller = Controller.createController(document.body, location.hostname, location.port);">
     <div class="lcars-app-container">
 
         <!-- HEADER ==================================================== -->
@@ -46,11 +101,7 @@
             <div class="lcars-bar horizontal lcars-p-1"></div>
             <div class="lcars-bar fill horizontal both-divider"></div>
             <div class="lcars-bar horizontal">
-                <div class="lcars-title right">
-                    <span id="vesselName">
-                        ---
-                    </span>
-                </div>
+                <div class="signalk-static lcars-title right" data-signalk-path="name"></div>
             </div>
             <div class="lcars-bar horizontal right-end decorated"></div>
         </div>

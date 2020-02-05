@@ -1,0 +1,284 @@
+.storage-config {
+    display: none;
+}
+
+.overlay object {
+    width: 100%;
+    height: 100%;
+    border: 0px;
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden;
+}
+
+.center {
+    text-align: center;
+}
+    
+.hidden {
+    display: none;
+}
+
+.widget {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.alert-active:not(.alert-cancelled) {
+    animation: opacity 2s ease-in-out infinite;
+    opacity: 1;
+}
+
+.alert-active.alert-cancelled {
+    color: orange;
+}
+
+.widget-notification.widget-indicator-on span {
+    padding: 3px;
+    background-color: orange;
+    opacity: 1;
+}
+
+@keyframes opacity {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.popup-parent .popup {
+    display: none;
+}
+
+.popup-parent:hover .popup {
+    display: block;
+}
+
+.popup {
+    position: absolute;
+    z-index: 10;
+}
+
+.red {
+    background: #ff8f8f;
+}
+
+.blue {
+    background: #8f8fff;
+}
+
+.grey {
+    background: grey;
+}
+
+.white {
+    background: #afaf8f;
+}
+
+.tank-bar {
+    min-height: 300px;
+    height: 300px;
+}
+
+.widget-card {
+  position: absolute;
+  bottom: 0px;
+  left: 5%;
+  width: 90%;
+  height: 100%;
+  font-weight: bold;
+  text-align: center;
+  pointer-events: none;
+}
+
+.widget-text {
+    display: table;
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+}
+.widget-text-cell {
+    display: table-cell;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+}
+.widget-text.widget-bottom {
+    display: table;
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+}
+
+
+
+span.clear::before {
+    content: "\A";
+    white-space: pre-line;
+}
+.overlay-content .widget-text-cell span::before {
+    content: "\A";
+    white-space: pre-line;
+}
+
+
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  display: none;
+  align-items: center;
+  justify-content: center; }
+
+#overlay-container {
+  display: inline-block;
+  position: relative;
+  z-index: 10;
+}
+
+#overlay-chart {
+  width: 100vw;
+  min-width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  position: relative; }
+
+#overlay-cancel {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  background: red;
+  z-index: 20; }
+
+.starboard::after {
+  content: "&rarr;"; }
+
+.theme-active-alert, .theme-active-alarm {
+  animation: blinker 1s linear infinite; }
+
+.theme-active-alarm {
+  color: red; }
+
+.widget-scroller-cell {
+  content-align: bottom;
+  position: relative; }
+
+.widget-scroller-bar {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  height: 100%;
+  border-top: khaki solid 1px; }
+
+.widget-bg-alarm {
+  animation: redflash 1s linear infinite; }
+
+.widget-digital {
+  position: relative;
+  z-index: 2; }
+
+.widget-scroller {
+  position: absolute;
+  box-sizing: border-box;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; }
+
+.widget-indicator {
+  background-color: gray;
+  height: 5px;
+  width: 100%;
+}
+
+.relay .widget-indicator {
+    width: 10px !important;
+}
+
+.switch .widget-indicator {
+    width: 3.5px !important;
+}
+
+.widget-gauge {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+}
+
+.widget-hgauge-label .widget-hgauge-grid {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
+
+.widget-hgauge-label {
+  height: inherit;
+}
+
+.widget-scale.widget-horizontal {
+    position: relative;
+    border-left: rgba(255,255,255,0.3) solid 1px;
+    border-right: rgba(255,255,255,0.3) solid 1px;
+    height: 33%;
+}
+
+.widget-scale.widget-horizontal .widget-scale-tick {
+  position: absolute;
+  box-sizing: border-box;
+  left: 0px;
+  bottom: 0px;
+  border-right: rgba(255,255,255,0.3) solid 1px;
+  height: 100%;
+}
+
+.widget-scale.widget-horizontal .widget-scale-tick:after {
+  float: right;
+  opacity: 0.3;
+  content: attr(data-tick-value);
+  transform: translate(50%,110%);
+}
+
+.widget-scale-tick.port {
+    color: red;
+}
+
+.widget-scale-tick.starboard {
+    color: darkgreen;
+}
+
+.relay .widget-indicator-on {
+  background-color: orange !important; }
+
+.switch .widget-indicator-on {
+  background-color: yellow !important; }
+
+
+.widget-cursor {
+    position: absolute;
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
+.widget-cursor.widget-vertical {
+    bottom: 0;
+    left: 5%;
+    width: 90%;
+}
+
+.widget-cursor.widget-horizontal {
+    bottom: 0px;
+    left: 0px;
+    width: 50%;
+    height: 100%;
+    border-right: 2px solid orange;
+}
