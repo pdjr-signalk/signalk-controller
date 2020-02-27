@@ -11,13 +11,14 @@ section of the Signal K documentation may provide helpful orientation.
 
 __signalk-controller__ implements a conventional and non-conventional schedule
 based controller which interfaces to a SignalK host through the host's
-notification bus. The controller is implemented as SignalK plugin and an
+notification bus. The controller is implemented as a SignalK plugin and an
 associated SignalK app which interacts with the plugin through a websocket
 based communication protocol.
 
-The SignalK plugin implements the following features:
+The SignalK plugin supports an arbitrary number of user defined control channels
+and implements a real-time scheduler which automatically processes programmed
+events across all channels. The plugin control interface allows schedule inception,
+programming, and override.
 
-1. Supports an arbitrary number of user defined control channels.
-2. Implements a real-time scheduler which automatically processed programmed
-   events across all channels.
-3.  although the application could be ab
+The SignalK app provides a web-control interface to the controller which supports
+programme construction and controller operation.
