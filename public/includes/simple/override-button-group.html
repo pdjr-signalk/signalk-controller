@@ -1,0 +1,38 @@
+<div id="override-button-group" class="table override-button-group">
+    <div class="table-row">
+        <div class="table-cell">
+            <div class="btn button override-button heating radio notification widget-indicator"
+                 data-button-group="override-button"
+                 data-button-value="heating"
+                 data-signalk-path="electrical.switches.0.15.state"
+                 data-widget-display-mode.0='{ "onvalue": "ON", "offvalue": "OFF" }'>
+                 HEATING---
+            </div>
+        </div>
+        <div class="table-cell">
+            <div class="btn button override-button water radio notification widget-indicator"
+                 data-button-group="override-button"
+                 data-button-value="water"
+                 data-signalk-path="electrical.switches.0.14.state"
+                 data-widget-display-mode.0='{ "onclass": "onn", "onvalue": "BLAH" }'>
+                 WATER
+            </div>
+        </div>
+        <div class="table-cell">
+            <div class="btn button override-button ensuite radio" data-button-group="override-button" data-button-value="ensuite">
+                EN-SUITE
+                <div class="notification widget-indicator" data-signalk-path="electrical.switches.0.15.state" data-value='{ "onvalue": "ON" }'>
+                ---
+                </div>
+            </div>
+        </div>
+        <div class="table-cell">
+            <div class="btn button override-button dayhead radio" data-button-group="override-button" data-button-value="dayhead">
+                DAY HEAD
+                <div class="notification widget-indicator" data-signalk-path="electrical.switches.0.15.state" data-value='{ "onvalue": "ON" }'>
+                ---
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

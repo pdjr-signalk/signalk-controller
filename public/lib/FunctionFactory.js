@@ -30,10 +30,12 @@ class FunctionFactory {
                                         );
                                     },
     
-            "notification":         function(args={}) {
-                                        var level = (args.level)?args.level:"alert";
+            "notification":         function(params) {
+                                        if (!params) return(['level']);
+                                        var _params = params;
                                         return(
                                             function(v) {
+                                                var level = Parameters.get(_params, "level") || "alert";
                                                 return((v.state == level)?v.message:null);
                                             }
                                         );

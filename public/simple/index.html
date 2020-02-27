@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Environment controller</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<script type="text/javascript" src="lib/SignalK.js"></script>
+	<script type="text/javascript" src="lib/PageUtils.js"></script>
+	<script type="text/javascript" src="lib/FunctionFactory.js"></script>
+	<script type="text/javascript" src="lib/websocketR2.js"></script>
+	<script type="text/javascript" src="lib/RemoteStorage.js"></script>
+	<script type="text/javascript" src="lib/ControllerClient.js"></script>
+	<script type="text/javascript" src="lib/Swipe.js"></script>
+	<script type="text/javascript" src="lib/ProgrammerInterface.js"></script>
+	<script type="text/javascript" src="lib/Controller.js"></script>
+	<script type="text/javascript" src="lib/Widget.js"></script>
+
+   	<script src='lib/@fullcalendar/core/main.js'></script>
+   	<script src='lib/@fullcalendar/daygrid/main.js'></script>
+   	<script src='lib/@fullcalendar/timegrid/main.js'></script>
+   	<script src='lib/@fullcalendar/interaction/main.js'></script>
+   	<script src='lib/@fullcalendar/bootstrap/main.js'></script>
+
+    <link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href='lib/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet' />
+
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="css/lcars.css">
+   	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/core/main.css' />
+   	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/daygrid/main.css' />
+   	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/timegrid/main.css' />
+   	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/bootstrap/main.css' />
+
+    <link rel="prev" title="Control Page" href="controller.html">
+    <link rel="next" title="Control Page" href="controller.html">
+
+    <style>
+        html, body {
+            background: black
+        }
+        p, h1, h2, h3 {
+            margin-top: 1em;
+        }
+        pre {
+            display: inline;
+            white-space: pre-line;
+            word-wrap: break-word;
+        }
+        .table,
+        .table-row,
+        .table-cell {
+            margin: 0;
+            padding: 2px;
+            border: 0;
+        }
+
+        .fc-today {
+            background: #0f0f0f !important;
+        }
+
+        .body {
+            position: relative;
+        }
+
+        #header {
+            width: 100%;
+            position: absolute;
+            top: 0;
+        }
+
+        #footer {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+        }
+
+        #mode-button-group {
+            width: 50%;
+            background: black;
+            border-radius: 2px;
+            position: fixed;
+            left: 0; right: 0; top: 0; bottom: 0;
+            margin: auto;
+        }
+        .mode-button-group .table-cell {
+            width: 33.33%;
+        }
+
+        .mode-button {
+            width: 100%;
+            height: 80px;
+            background: grey;
+            font-weight: bold;
+            border: 3px solid grey;
+            vertical-align: middle;
+        }
+        .mode-button.on {
+            opacity: 100%;
+        }
+
+        .on-mode-button {
+            background: #7fff7f;
+        }
+
+        .off-mode-button {
+            background: red;
+        }
+
+        .auto-mode-button {
+            background: yellow;
+        }
+
+        #channel-button-group {
+            width: 100%;
+        }
+        #channel-button-group .table-cell {
+            width: 25%;
+        }
+        .channel-button {
+            position: relative;
+            width: 100%;
+            height: 100px;
+            border: 3px solid grey;
+            font-weight: bold;
+            color: white;
+        }
+        .channel-button span {
+            display: table;
+            margin: 0 auto;
+        }
+        .channel-button.widget-indicator-on span {
+            color: orange;
+        }
+        .channel-button.widget-indicator-off span {
+            color: grey;
+        }
+        .channel-button.ensuite::after,
+        .channel-button.dayhead::after {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url(http://192.168.1.1:3000/signalk-controller/simple/includes/towel-rail.svg);
+            background-repeat: no-repeat;
+            background-size: 30%;
+            background-position: right bottom;
+            content: "";
+        }
+
+        #override-button-group {
+            width: 100%;
+        }
+        #override-button-group .table-cell {
+            width: 50%;
+        }
+        .override-button {
+            width: 100%;
+            height: 80px;
+            border: 3px solid grey;
+            font-weight: bold;
+            color: white;
+            background: grey;
+        }
+
+    
+        .heating { background: #7f3f3f; }
+        .water { background: #3f3f7f; }
+        .ensuite { background: #7f7f3f; }
+        .dayhead { background: #7f3f7f; }
+        .on { color: white; }
+        .widget-indicator-on { border: 3px solid orange; }
+
+
+        .season-button {
+            width: 100%;
+            background: #3f3f7f;
+        }
+
+        #save-button, #saveas-button {
+            width: 100px;
+            height: 40px;
+            background: green;
+        }
+
+        #save-button.on, #saveas-button.on {
+            background: red;
+        }
+
+        .programme {
+            height: 400px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        function afterInclude() {
+            //controller.createCalendar(document.getElementById('calendar'));
+            new Swipe('pagecontent', null, { rightButton: "swipefallback" });
+        }
+
+        function noRightClick(contextHandler) {
+            document.addEventListener("contextmenu", (e) => { e.preventDefault(); });
+            window.event.cancelBubble = true;
+        }
+    
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</head>
+<body onload="noRightClick(); controller = Controller.create({ host: '192.168.1.1', signalkPort: 3000, controllerPort: 9000, debug: true });">
+    <div id="header">
+        <div class="hidden" data-include="includes/channel-button-group.html"></div>
+    </div>
+    <div id="content">
+    </div>
+    <div id="footer">
+        <div class="hidden" data-include="includes/override-button-group.html"></div>
+    </div>
+    <div class="hidden" data-include="includes/mode-button-group.html"></div>
+</body>
+</html>
+

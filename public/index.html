@@ -7,13 +7,22 @@
 	<script type="text/javascript" src="lib/SignalK.js"></script>
 	<script type="text/javascript" src="lib/PageUtils.js"></script>
 	<script type="text/javascript" src="lib/FunctionFactory.js"></script>
-	<script type="text/javascript" src="lib/StructuredStorage.js"></script>
+	<script type="text/javascript" src="lib/websocketR2.js"></script>
+	<script type="text/javascript" src="lib/RemoteStorage.js"></script>
+	<script type="text/javascript" src="lib/ControllerClient.js"></script>
+	<script type="text/javascript" src="lib/Swipe.js"></script>
+	<script type="text/javascript" src="lib/ProgrammerInterface.js"></script>
 	<script type="text/javascript" src="lib/Controller.js"></script>
+	<script type="text/javascript" src="lib/Widget.js"></script>
 
    	<script src='lib/@fullcalendar/core/main.js'></script>
    	<script src='lib/@fullcalendar/daygrid/main.js'></script>
    	<script src='lib/@fullcalendar/timegrid/main.js'></script>
    	<script src='lib/@fullcalendar/interaction/main.js'></script>
+   	<script src='lib/@fullcalendar/bootstrap/main.js'></script>
+
+    <link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href='lib/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet' />
 
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<link rel="stylesheet" type="text/css" href="css/lcars.css">
@@ -21,6 +30,9 @@
    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/daygrid/main.css' />
    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/timegrid/main.css' />
    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/bootstrap/main.css' />
+
+    <link rel="prev" title="Control Page" href="controller.html">
+    <link rel="next" title="Control Page" href="controller.html">
 
     <style>
         html, body {
@@ -34,117 +46,119 @@
             white-space: pre-line;
             word-wrap: break-word;
         }
+        .table-cell {
+            margin: 0;
+            padding: 2px;
+            border: 0;
+        }
+
+        .fc-today {
+            background: #0f0f0f !important;
+        }
+
+        .mode-button-group {
+            background: grey;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 6;
+            width: 300px;
+            padding: 10px;
+            border-radius: 10px;
+            }
+
+        .mode-button {
+            width: 100px;
+            height: 80px;
+            background: grey;
+            font-weight: bold;
+            align: center;
+            vertical-align: middle;
+            opacity: 50%;
+        }
+        .mode-button.on {
+            opacity: 100%;
+        }
+
+        .on-mode-button {
+            background: #7fff7f;
+        }
+
+        .off-mode-button {
+            background: red;
+        }
+
+        .auto-mode-button {
+            background: yellow;
+        }
+
         .channel-button-group {
             width: 100% !important;
         }
+        .override-button-group {
+            width: 100% !important;
+        }
     
+        .override-button,
         .channel-button {
             width: 100% !important;
             height: 40px;
             background: grey;
         }
-        .ch { background: #ff7f7f; opacity: 0.5;}
-        .hw { background: #7f7fff; opacity: 0.5;}
-        .re { background: #ffff7f; opacity: 0.5;}
-        .rd { background: #ff7fff; opacity: 0.5;}
-        .channel-button-group .on { opacity: 1; }
+
+        .heating { background: #7f3f3f; }
+        .water { background: #3f3f7f; }
+        .ensuite { background: #7f7f3f; }
+        .dayhead { background: #7f3f7f; }
+        .on { color: white; font-weight: bold; border: yellow; }
+
+
+        .season-button {
+            width: 100%;
+            background: #3f3f7f;
+        }
+
+        #save-button, #saveas-button {
+            width: 100px;
+            height: 40px;
+            background: green;
+        }
+
+        #save-button.on, #saveas-button.on {
+            background: red;
+        }
+
+        .programme {
+            height: 400px;
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
-            var events = [];
-
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                plugins: ['timeGrid', 'interaction'],
-                events: [],
-                selectable: true,
-                unselectAuto: false,
-                defaultView: 'timeGridWeek',
-                themeSystem: 'bootstrap',
-                header: { left: 'prev,next today', center: '', right: 'timeGridWeek' },
-                displayEventTime: false,
-                allDaySlot: false,
-                slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false, omitZeroMinute: false, meridiem: 'false' },
-                columnHeaderFormat: { weekday: 'short' },
-                dateClick: function(info) { alert('clicked ' + info.dateStr + ' on resource ' + info.resource.id); },
-                select: function(info) {
-                    var background = window.controller.getChannel();
-                    console.log(background);
-                    calendar.addEvent({
-                        start: info.startStr,
-                        end: info.endStr,
-                        backgroundColor: background
-                    })
-                },
-                eventClick: function(info) { info.event.remove(); }
-            });
-
-            calendar.render();
-        });
+        function afterInclude() {
+            //controller.createCalendar(document.getElementById('calendar'));
+            new Swipe('pagecontent', null, { rightButton: "swipefallback" });
+        }
 
         function noRightClick(contextHandler) {
             document.addEventListener("contextmenu", (e) => { e.preventDefault(); });
             window.event.cancelBubble = true;
         }
+    
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
     </script>
 </head>
-<body onload="noRightClick(); controller = Controller.createController(document.body, location.hostname, location.port);">
-    <div class="lcars-app-container">
-
-        <!-- HEADER ==================================================== -->
-
-        <div id="header" class="lcars-row header">
-            <div class="lcars-elbow left-bottom"></div>
-            <div class="lcars-bar horizontal lcars-p-1"></div>
-            <div class="lcars-bar horizontal lcars-p-1"></div>
-            <div class="lcars-bar horizontal lcars-p-1"></div>
-            <div class="lcars-bar horizontal lcars-p-1"></div>
-            <div class="lcars-bar fill horizontal both-divider"></div>
-            <div class="lcars-bar horizontal">
-                <div class="signalk-static lcars-title right" data-signalk-path="name"></div>
-            </div>
-            <div class="lcars-bar horizontal right-end decorated"></div>
-        </div>
-
-        <!-- SIDE MENU ================================================= -->
-
-        <div id="left-menu" class="lcars-column start-space lcars-u-1">
-            <div data-include="includes/datetime.html"></div>
-            <div class="lcars-bar lcars-u-1-1"></div>
-            <div data-include="includes/heating-channel.html"></div>
-            <div class="lcars-bar lcars-u-1-1"></div>
-            <div class="lcars-bar lcars-u-1-1"></div>
-            <div class="lcars-bar lcars-u-1-1"></div>
-            <div class="lcars-bar"></div>
-        </div>
-
-        <!-- FOOTER ==================================================== -->
-
-        <div id="footer" class="lcars-row footer">
-            <div class="lcars-elbow left-top"></div>
-            <div class="lcars-bar horizontal bottom lcars-p-1"></div>
-            <div class="lcars-bar horizontal bottom lcars-p-1"></div>
-            <div class="lcars-bar horizontal bottom lcars-p-1"></div>
-            <div class="lcars-bar horizontal bottom lcars-p-1"></div>
-            <div class="lcars-bar horizontal bottom lcars-p-1"></div>
-            <div data-include="includes/notification.html"></div>
-            <div class="lcars-bar horizontal right-end left-divider bottom"></div>
-        </div>
-
-        <!-- MAIN CONTAINER ============================================ -->
-
-        <div id="container" style="overflow: hidden;">
-            <!-- COLUMN LAYOUT -->
-            <div class="lcars-column">
-		<div id="programmer">
-    			<div id="calendar" style="width: 100%; height: 600px;">
-    			</div>
-		</div>
-            </div>
-        </div>
-
+<body onload="noRightClick(); controller = Controller.create({ host: '192.168.1.1', port: 9000, debug: true });">
+    <div data-include="config.html"></div>
+    <div id="pagecontent">
+        <div data-include="includes/controller.html"></div>
+        <div data-include="includes/programmer.html"></div>
     </div>
-
 </body>
 </html>
 
