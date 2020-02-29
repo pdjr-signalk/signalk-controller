@@ -7,7 +7,7 @@ class ControllerClient {
     static create(options) {
         if (options.debug) console.log("ControllerClient.create(%s)...", JSON.stringify(options));
 
-        return(new ControllerClient(options));
+        try { return(new ControllerClient(options)); } catch(e) { return(null); }
     }
 
     /**
@@ -20,29 +20,34 @@ class ControllerClient {
         if (options.debug) console.log("ControllerClient(%s)...", JSON.stringify(options));
 
         this.options = options;
-        this.ws = new WebSocketR2(this.options.server); 
+        this.ws = new WebSocketR2("ws://" + this.options.server + ":" + this.options.port); 
+        this.wsIsOpen = false;
+
+        this.ws.onopen(function() { this.wsIsOpen = true; }.bind(this));
     }
 
-    start() {
-        if (this.options.debug) console.log("ControllerClient.start()...");
-
-        this.ws.send({ action: "start", params: {} });
+    waitForConnection(timeout=500) {
+        if (this.options.debug) console.log("ControllerClient.waitForConnection(%s)...", timeout);
+        const poll = resolve => {
+            if (this.wsIsOpen) { resolve(); } else { setTimeout(_ => poll(resolve), timeout); }
+        }
+        return new Promise(poll);
     }
 
-    stop() {
-        if (this.options.debug) console.log("ControllerClient.stop()...");
-
-        this.ws.send({ action: "stop", params: {} });
-    }
-
-    restart() {
-        if (this.options.debug) console.log("ControllerClient.restart()...");
-
-        this.ws.send({ action: "restart", params: {} });
+    getChannelsInGroup(group, callback) {
+        var _callback = callback;
+        this.ws.send({ action: "getChannelsInGroup", params: { group: group }}, function(message) {
+            var channels = message.data.value;
+            _callback(channels);
+        });
     }
 
     setChannelMode(channel, mode) {
         this.ws.send({ action: "setChannelMode", params: { channel: channel, mode: mode } });
+    }
+
+    toggleOverride(override) {
+        this.ws.send({ action: "toggleOverride", params: { override: override } });
     }
 
     saveEvent(calendarEvent) {

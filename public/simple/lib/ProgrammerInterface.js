@@ -6,7 +6,7 @@ class ProgrammerInterface {
     }
 
     constructor(root) {
-        console.log("ProgrammerInterface(%s)...", root);
+        //console.log("ProgrammerInterface(%s)...", root);
         this.root = root;
         var _this = this;
 
@@ -25,7 +25,6 @@ class ProgrammerInterface {
                 });
             } else {
                 button.addEventListener('click', function() {
-                    console.log("Click");
                     this.classList.toggle('on');
                 });
             }
@@ -65,7 +64,7 @@ class ProgrammerInterface {
     }
 
     getSelectedElements(selector) {
-        console.log("getSelectedElements(%s)...", selector);
+        //console.log("getSelectedElements(%s)...", selector);
         var retval = null;
         switch (selector.charAt(0)) {
             case '#':

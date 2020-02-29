@@ -94,6 +94,7 @@
             border: 3px solid grey;
             vertical-align: middle;
         }
+
         .mode-button.on {
             opacity: 100%;
         }
@@ -161,7 +162,17 @@
             font-weight: bold;
             color: white;
             background: grey;
+            position: relative;
         }
+        .override-button .div {
+            position: absolute;
+            bottom: 0;
+            left 0;
+            width: 100%;
+            height: 50px;
+        }
+
+
 
     
         .heating { background: #7f3f3f; }
@@ -194,6 +205,18 @@
         .hidden {
             display: none;
         }
+
+        .pages {
+            overflow: hidden;
+        }
+
+        .pages .page {
+            display: none;
+        }
+
+        .pages .page.selected {
+            display: block;
+        }
     </style>
     <script>
         function afterInclude() {
@@ -211,16 +234,32 @@
         }
     </script>
 </head>
-<body onload="noRightClick(); controller = Controller.create({ host: '192.168.1.1', signalkPort: 3000, controllerPort: 9000, debug: true });">
-    <div id="header">
-        <div class="hidden" data-include="includes/channel-button-group.html"></div>
+<body onload="noRightClick(); controller = Controller.create({ host: '192.168.1.1', signalkPort: 3000, controllerPort: 9000, debug: false });">
+    <div class="pages">
+        <div id="controller-page" class="page selected">
+            <div id="header">
+            </div>
+            <div id="content">
+            </div>
+            <div id="footer">
+                <div class="hidden" data-include="includes/override-button-group.html">
+                </div>
+            </div>
+            <div class="hidden" data-include="includes/mode-button-group.html">
+            </div>
+        </div>
+        <div id="calendar-page" class="page">
+            <div id="header">
+            </div>
+            <div id="content">
+		        <div id="calendar" style="width: 100%; height: 300px;">
+		        </div>
+		    </div>
+            <div id="footer">
+                <div id="saveas-button" class="btn button">Save as...</div>
+            </div>
+        </div>
     </div>
-    <div id="content">
-    </div>
-    <div id="footer">
-        <div class="hidden" data-include="includes/override-button-group.html"></div>
-    </div>
-    <div class="hidden" data-include="includes/mode-button-group.html"></div>
 </body>
 </html>
 

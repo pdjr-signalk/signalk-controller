@@ -1,7 +1,7 @@
 class Widget {
 
     static createWidget(element, filterName) {
-        console.log("createWidget(%s,%s)...", element, filterName);
+        //console.log("createWidget(%s,%s)...", element, filterName);
 
         var retval = null;
         var type = element.className.split(" ").reduce((a,v) => { return((v.startsWith("widget-"))?v.substr(7):null); }, null);
@@ -373,7 +373,7 @@ class TextComponent extends WidgetComponent {
 class IndicatorComponent extends WidgetComponent {
 
     constructor(parentNode, params) {
-        console.log("IndicatorComponent(%s,%s)...", parentNode, JSON.stringify(params));
+        //console.log("IndicatorComponent(%s,%s)...", parentNode, JSON.stringify(params));
 
         super(parentNode, IndicatorComponent.setParameterDefaults(params));
 

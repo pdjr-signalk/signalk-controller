@@ -2,7 +2,7 @@
 class Swipe {
 
 	constructor(containerId, callback, options) {
-        console.log("Swipe(%s,callback,%s)...", containerId, JSON.stringify(options));
+        //console.log("Swipe(%s,callback,%s)...", containerId, JSON.stringify(options));
         this.containerId = containerId;
         this.callback = callback;
         this.options = options;

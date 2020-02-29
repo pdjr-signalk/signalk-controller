@@ -8,6 +8,49 @@
                     "title": "Controller schedule database directory",
                     "type": "string",
                     "default": "/var/spool/signalk-controller"
+                },
+                "channels": {
+                    "title": "Controller channels",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "title": "Channel name",
+                                "type": "string"
+                            },
+                            "group": {
+                                "title": "Channel group",
+                                "type": "string"
+                            },
+                            "description": {
+                                "title": "Channel description",
+                                "type": "string"
+                            },
+                            "statePath": {
+                                "title": "SignalK path to state value",
+                                "type": "string"
+                            },
+                            "modePath": {
+                                "title": "SignalK path to mode notification",
+                                "type": "string"
+                            },
+                            "nextPath": {
+                                "title": "SignalK path to next notification",
+                                "type": "string"
+                            },
+                            "iconUrl": {
+                                "title": "URL of channel icon",
+                                "type": "string"
+                            },
+                            "defaultMode": {
+                                "title": "Channel's default operating mode",
+                                "type": "string",
+                                "default" : "OFF"
+                            }
+                        }
+                    }
                 }
             }
         },
@@ -15,7 +58,7 @@
             "type": "object",
             "properties": {
                 "port": {
-                    "title": "Controller client port",
+                    "title": "Controller service port",
                     "type": "number",
                     "default": 9000
                 }

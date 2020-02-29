@@ -23,7 +23,7 @@ const ControllerServer = require("./lib/ControllerServer.js");
 
 const PLUGIN_SCHEMA_FILE = __dirname + "/schema.json";
 const PLUGIN_UISCHEMA_FILE = __dirname + "/uischema.json";
-const DEBUG = false;
+const DEBUG = true;
 
 module.exports = function(app) {
 	var plugin = {};
@@ -54,24 +54,29 @@ module.exports = function(app) {
             const storage = require('node-persist');
             await storage.init({ dir: options.database.directory });
 
-            // Create controller instance using the opened storage...
-            const controller = Controller.create({
-                storage: storage,
-                issueNotificationCallback: function(key, state, message) { Notification.issueNotification(app, plugin.id, key, state, message); },
-                cancelNotificationCallback: function(key) { Notification.cancelNotification(app, plugin.id, key); },
-                debug: DEBUG
-            });
+            try {
+                // Create controller instance using the opened storage...
+                const controller = Controller.create({
+                    storage: storage,
+                    channels: options.database.channels,
+                    issueNotificationCallback: function(key, state, message) { Notification.issueNotification(app, plugin.id, key, state, message); },
+                    cancelNotificationCallback: function(key) { Notification.cancelNotification(app, plugin.id, key); },
+                    debug: DEBUG
+                });
 
-            // Create server access to controller for remote clients...
-            const server = ControllerServer.create({
-                port: options.server.port,
-                allowedClients: options.clients,
-                controller: controller,
-                logCallback: function(m) { log.N(m); },
-                debug: DEBUG
-            });
+                // Create server access to controller for remote clients...
+                const server = ControllerServer.create({
+                    port: options.server.port,
+                    allowedClients: options.clients,
+                    controller: controller,
+                    logCallback: function(m) { log.N(m); },
+                    debug: DEBUG
+                });
 
-            server.start();
+                server.start();
+            } catch(e) {
+                console.log("ERROR: " + e);
+            }
         })();
 
 	}

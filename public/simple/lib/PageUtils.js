@@ -168,4 +168,11 @@ class PageUtils {
         for (var i = 0; i < elements.length; i++) elements[i].addEventListener(eventtype, callback);
     }
 
+    static waitForFlag(flagObject, flagName, timeout=500) {
+        const poll = resolve => {
+            if (flagObject[flagName]) { resolve(); } else { setTimeout(_ => poll(resolve), timeout); }
+        }
+        return new Promise(poll);
+    }
+
 }

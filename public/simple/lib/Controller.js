@@ -3,7 +3,7 @@ class Controller extends SignalK {
     static create(options) {
         if (options.debug) console.log("Controller.create(%s)...", JSON.stringify(options));
 
-        return(new Controller(options));
+        try { return(new Controller(options)); } catch(e) { return(null); }
     }
     
 
@@ -14,53 +14,94 @@ class Controller extends SignalK {
             this.options = options;
             this.pageutils = new PageUtils({ "overlayOnLoad": function(r) { }});
             this.functionfactory = new FunctionFactory();
-            this.client = new ControllerClient({ server: "ws://" + options.host + ":" + options.controllerPort, debug: options.debug });
+            this.client = null;
             this.calendar = null;
             this.week = 0;
             this.events = [];
             this.selectedChannel = null;
+            this.flags = { pageReady: false };
 
-            // Load document fragments
+            // Recursively load document fragments
             while (PageUtils.include(document));
             window.afterInclude();
 
-            // Populate page with static values derived from Signal K server
-            PageUtils.walk(document, "signalk-static", element => {
-                var path = PageUtils.getAttributeValue(element, "data-signalk-path");
-                var filter = this.functionfactory.getFilter(PageUtils.getAttributeValue(element, "data-filter"));
-                super.interpolateValue(path, element, filter);
+            // Connect to server and wait for connection to complete...
+            this.client = new ControllerClient({ server: this.options.host, port: this.options.controllerPort, debug: options.debug });
+            this.client.waitForConnection().then(_ => {
+                this.client.getChannelsInGroup("heating", function(channels) {
+                    this.buildChannelButtonGroup(document.getElementById('header'), channels);
+                    this.flags.pageReady = true;
+                }.bind(this));
+                PageUtils.waitForFlag(this.flags, "pageReady").then(_ => {
+                    // Populate page with static values derived from Signal K server
+                    PageUtils.walk(document, "signalk-static", element => {
+                        var path = PageUtils.getAttributeValue(element, "data-signalk-path");
+                        var filter = this.functionfactory.getFilter(PageUtils.getAttributeValue(element, "data-filter"));
+                        super.interpolateValue(path, element, filter);
+                    });
+                    // Populate page with dynamic values derived from Signal K server
+                    PageUtils.walk(document, "signalk-dynamic", element => {
+                        var path = PageUtils.getAttributeValue(element, "data-signalk-path");
+                        var filter = this.functionfactory.getFilter(PageUtils.getAttributeValue(element, "data-filter"));
+                        super.registerInterpolation(path, element, filter);
+                    });
+                    // Populate page with widgets
+                    PageUtils.wildWalk(document, "widget-", element => {
+                        if (element.hasAttribute("data-source")) this.localStorage.setAsAttributes(element.getAttribute("data-source"), element); 
+                        if (element.hasAttribute("data-signalk-path")) {
+                            super.registerCallback(element.getAttribute("data-signalk-path"), Widget.createWidget(element, element.getAttribute("data-filter")));
+                        }
+                    });
+
+                    this.programmerInterface = ProgrammerInterface.create(document);
+                    this.programmerInterface.addEventListener('click', '.channel-button', function(value) { this.channelClicked(); }.bind(this));
+                    this.programmerInterface.addEventListener('click', '.mode-button', function() { this.modeClicked(); }.bind(this));
+                    this.programmerInterface.addEventListener('click', '.override-button', function() { this.overrideClicked(); }.bind(this));
+
+                    this.programmerInterface.addEventListener('click', '#saveas-button', function() { this.saveAsClicked(); }.bind(this));
+                    this.programmerInterface.addEventListener('click', '.season-button', function() { this.seasonClicked(); }.bind(this));
+
+                    controller.createCalendar(document.getElementById('calendar'));
+                });
             });
-
-            // Populate page with dynamic values derived from Signal K server
-            PageUtils.walk(document, "signalk-dynamic", element => {
-                var path = PageUtils.getAttributeValue(element, "data-signalk-path");
-                var filter = this.functionfactory.getFilter(PageUtils.getAttributeValue(element, "data-filter"));
-                super.registerInterpolation(path, element, filter);
-            });
-
-            // Populate page with widgets
-            PageUtils.wildWalk(document, "widget-", element => {
-                if (element.hasAttribute("data-source")) this.localStorage.setAsAttributes(element.getAttribute("data-source"), element); 
-                if (element.hasAttribute("data-signalk-path")) {
-                    super.registerCallback(element.getAttribute("data-signalk-path"), Widget.createWidget(element, element.getAttribute("data-filter")));
-                    //super.getValue(element.getAttribute("data-signalk-path"), Widget.createWidget(element, element.getAttribute("data-filter")));
-                }
-            });
-
-            this.programmerInterface = ProgrammerInterface.create(document);
-            this.programmerInterface.addEventListener('click', '#saveas-button', function() { this.saveAsClicked(); }.bind(this));
-            this.programmerInterface.addEventListener('click', '.season-button', function() { this.seasonClicked(); }.bind(this));
-            this.programmerInterface.addEventListener('click', '.channel-button', function(value) { this.channelClicked(); }.bind(this));
-            this.programmerInterface.addEventListener('click', '.mode-button', function() { this.modeClicked(); }.bind(this));
-
-            controller.createCalendar(document.getElementById('calendar'));
         });
-
+        this.swipe = new Swipe("pages");
     }
 
     connectionLost() {
         if (confirm("Server connection lost! Reconnect?")) {
             window.location = window.location;
+        }
+    }
+
+    buildChannelButtonGroup(container, channels) {
+        if (this.options.debug) console.log("Controller.buildChannelButtonGroup(%s,%s)...", container, channels);
+
+        if ((container) && (channels)) {
+            var table = document.createElement("div"); table.className = "table channel-button-group";
+            var row = document.createElement("div"); row.classList.add("table-row");
+            channels.forEach(channel => {
+                var cell = document.createElement("div"); cell.classList.add("table-cell");
+                var button = document.createElement("div");
+                button.className = "btn button channel-button radio notification " + channel.name + " widget-indicator";
+                button.setAttribute("data-button-group", "channel-button");
+                button.setAttribute("data-button-value", channel.name);
+                button.setAttribute("data-signalk-path", channel.statePath);
+                button.setAttribute("data-icon-url", channel.iconUrl);
+                button.appendChild(document.createTextNode(channel.name.toUpperCase()));
+                var mode = document.createElement("div"); mode.classList.add("signalk-dynamic");
+                mode.setAttribute("data-signalk-path", channel.modePath);
+                mode.setAttribute("data-filter", "notification-value");
+                button.appendChild(mode);
+                var next = document.createElement("div"); mode.classList.add("signalk-dynamic");
+                next.setAttribute("data-signalk-path", channel.nextPath);
+                next.setAttribute("data-filter", "notification-value");
+                button.appendChild(next);
+                cell.appendChild(button);
+                row.appendChild(cell);
+            });
+            table.appendChild(row);
+            container.appendChild(table);
         }
     }
 
@@ -76,15 +117,10 @@ class Controller extends SignalK {
         if (this.options.debug) console.log("channelClicked()...");
 
         if (this.programmerInterface.getState(".channel-button")) {
-            if (this.selectedOverride) document.getElementById("mode-button-group").classList.remove(this.selectedOverride);
-            this.selectedChannel = this.programmerInterface.getValue(".channel-button");
-            document.getElementById("mode-button-group").classList.add(this.selectedOverride);
             document.getElementById("mode-button-group").classList.remove("hidden");
         } else {
-            this.programmerInterface.setState("channel-button", false);
-            document.getElementById("mode-button-group").classList.remove(this.selectedOverride);
             document.getElementById("mode-button-group").classList.add("hidden");
-            this.selectedChannel = null;
+            this.programmerInterface.setState('channel-button', false);
         }
     }
 
@@ -93,15 +129,24 @@ class Controller extends SignalK {
     
         var channel = this.programmerInterface.getValue('.channel-button');
         var mode = this.programmerInterface.getValue('.mode-button');
-        console.log("Channel = %s, mode = %s", channel, mode);
-        this.client.setChannelMode(channel, mode);
-        document.getElementById("mode-button-group").classList.remove(this.selectedOverride + "-channel-button");
-        document.getElementById("mode-button-group").classList.add("hidden");
-        this.programmerInterface.setState('channel-button', false);
+        if ((channel) && (mode)) {
+            this.client.setChannelMode(channel, mode);
+            document.getElementById("mode-button-group").classList.add("hidden");
+            this.programmerInterface.setState('channel-button', false);
+        }
+    }
+
+    overrideClicked() {
+        if (this.options.debug) console.log("overrideClicked()...");
+
+        var override = this.programmerInterface.getValue('.override-button');
+        if (override) {
+            this.client.toggleOverride(override);
+            this.programmerInterface.setState('override-button', false);
+        }
     }
 
     seasonClicked() {
-        console.log("seasonClicked()...");
         var season = controller.programmerInterface.getValue('season-button');
         if (controller.programmerInterface.getState('saveas-button')) {
             // Save the current events as a pattern for <season> 
@@ -119,7 +164,7 @@ class Controller extends SignalK {
     }
 
     saveAsClicked(controller) {
-        console.log("saveAsClicked(controller)...");
+        if (this.options.debug) console.log("saveAsClicked(controller)...");
         this.getCalendarViewStartDate(controller);
         if (controller.programmerInterface.getState('saveas-button')) {
             document.getElementById('season-button-group').classList.add('lcars-flash');
@@ -162,7 +207,6 @@ class Controller extends SignalK {
      * via successCallback.
      */
     static getEvents(controller, request, successCallback, failureCallback) {
-        console.log("getEvents(%s,%s,%s,%s)...", "controller", request, "successCallback", "failureCallback");
         var _controller = controller;
         var _start = request.start;
         var _successCallback = successCallback;
@@ -206,6 +250,5 @@ class Controller extends SignalK {
         controller.client.removeEvent(info.event);
         info.event.remove();
     }
-
 
 }
