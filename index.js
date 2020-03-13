@@ -56,7 +56,7 @@ module.exports = function(app) {
 
             try {
                 // Create controller instance using the opened storage...
-                const controller = Controller.create({
+                const controller = new Controller({
                     storage: storage,
                     channels: options.database.channels,
                     issueNotificationCallback: function(key, state, message) { Notification.issueNotification(app, plugin.id, key, state, message); },
@@ -65,7 +65,7 @@ module.exports = function(app) {
                 });
 
                 // Create server access to controller for remote clients...
-                const server = ControllerServer.create({
+                const server = new ControllerServer({
                     port: options.server.port,
                     allowedClients: options.clients,
                     controller: controller,

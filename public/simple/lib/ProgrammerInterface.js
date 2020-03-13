@@ -8,21 +8,21 @@ class ProgrammerInterface {
     constructor(root) {
         //console.log("ProgrammerInterface(%s)...", root);
         this.root = root;
-        var _this = this;
 
         [...this.root.getElementsByClassName('button')].forEach(button => {
             if (button.classList.contains('radio')) {
-                button.addEventListener('click', function() {
-                    var group = this.getAttribute('data-button-group');
-                    var value = this.getAttribute('data-button-value');
-                    _this.getSelectedElements("." + group).forEach(e => {
+                button.addEventListener('click', function(elem) {
+                    alert(elem.target);
+                    var group = elem.target.getAttribute('data-button-group');
+                    var value = elem.target.getAttribute('data-button-value');
+                    this.getSelectedElements("." + group).forEach(e => {
                         if (e.getAttribute('data-button-value') == value) {
                             e.classList.toggle('on');
                         } else {
                             e.classList.remove('on');
                         }
                     });
-                });
+                }.bind(this));
             } else {
                 button.addEventListener('click', function() {
                     this.classList.toggle('on');
@@ -41,7 +41,7 @@ class ProgrammerInterface {
 
     getState(selector) {
         var ons = this.getSelectedElements(selector).filter(e => (e.classList.contains('on')));
-        return((ons.length > 0)?true:false);
+        return(ons.length > 0);
     }
 
     setState(selector, state) {

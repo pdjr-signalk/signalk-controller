@@ -25,7 +25,6 @@
     <link rel="stylesheet" type="text/css" href='lib/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet' />
 
 	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<link rel="stylesheet" type="text/css" href="css/lcars.css">
    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/core/main.css' />
    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/daygrid/main.css' />
    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/timegrid/main.css' />
@@ -35,76 +34,8 @@
     <link rel="next" title="Control Page" href="controller.html">
 
     <style>
-        html, body {
-            background: black
-        }
-        p, h1, h2, h3 {
-            margin-top: 1em;
-        }
-        pre {
-            display: inline;
-            white-space: pre-line;
-            word-wrap: break-word;
-        }
-        .table-cell {
-            margin: 0;
-            padding: 2px;
-            border: 0;
-        }
-
         .fc-today {
             background: #0f0f0f !important;
-        }
-
-        .mode-button-group {
-            background: grey;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 6;
-            width: 300px;
-            padding: 10px;
-            border-radius: 10px;
-            }
-
-        .mode-button {
-            width: 100px;
-            height: 80px;
-            background: grey;
-            font-weight: bold;
-            align: center;
-            vertical-align: middle;
-            opacity: 50%;
-        }
-        .mode-button.on {
-            opacity: 100%;
-        }
-
-        .on-mode-button {
-            background: #7fff7f;
-        }
-
-        .off-mode-button {
-            background: red;
-        }
-
-        .auto-mode-button {
-            background: yellow;
-        }
-
-        .channel-button-group {
-            width: 100% !important;
-        }
-        .override-button-group {
-            width: 100% !important;
-        }
-    
-        .override-button,
-        .channel-button {
-            width: 100% !important;
-            height: 40px;
-            background: grey;
         }
 
         .heating { background: #7f3f3f; }
@@ -112,22 +43,6 @@
         .ensuite { background: #7f7f3f; }
         .dayhead { background: #7f3f7f; }
         .on { color: white; font-weight: bold; border: yellow; }
-
-
-        .season-button {
-            width: 100%;
-            background: #3f3f7f;
-        }
-
-        #save-button, #saveas-button {
-            width: 100px;
-            height: 40px;
-            background: green;
-        }
-
-        #save-button.on, #saveas-button.on {
-            background: red;
-        }
 
         .programme {
             height: 400px;

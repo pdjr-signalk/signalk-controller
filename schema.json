@@ -48,6 +48,23 @@
                                 "title": "Channel's default operating mode",
                                 "type": "string",
                                 "default" : "OFF"
+                            },
+                            "overrides": {
+                                "title": "Overrides for channel",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "title": "Override name",
+                                            "type": "string"
+                                        },
+                                        "path": {
+                                            "title": "Override SignalK path",
+                                            "type": "string"
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

@@ -12,10 +12,11 @@
 .w3-theme-light {color:#000; background-color:#f3f4fb}
 .w3-theme-dark {color:#fff; background-color:#20295b}
 .w3-theme-action {color:#fff; background-color:#20295b}
+.w3-theme-selected { background-color: #6271c8 !important}
 
 .w3-theme {color:#fff; background-color:#3f51b5}
 .w3-text-theme {color:#3f51b5}
-.w3-border-theme {border-color:#3f51b5}
+.w3-border-theme {border-color:red !important;/*#3f51b5*/}
 
 .w3-hover-theme:hover {color:#fff; background-color:#3f51b5}
 .w3-hover-text-theme:hover {color:#3f51b5}
