@@ -1,4 +1,4 @@
-class Controller extends SignalK {
+class Controller {
 
     static create(options) {
         if (options.debug) console.log("Controller.create(%s)...", JSON.stringify(options));
@@ -10,218 +10,143 @@ class Controller extends SignalK {
     constructor(options) {
         if (options.debug) console.log("Controller(%s)...", JSON.stringify(options));
 
-        super(options.host, options.signalkPort).waitForConnection().then(_ => {
-            this.options = options;
-            this.pageutils = new PageUtils({ "overlayOnLoad": function(r) { }});
-            this.functionfactory = new FunctionFactory();
-            this.client = new ControllerClient({ server: "ws://" + options.host + ":" + options.controllerPort, debug: options.debug });
-            this.calendar = null;
-            this.week = 0;
-            this.events = [];
-            this.selectedOverride = null;
+        if (!options.client) throw "Controller: signalk-controller client interface must be specified (options.client)";
+        if (!options.channels) throw "Controller: controller channel definitions must be specified (options.channels)";
+        if (!options.debug) options.debug = false;
 
-            // Load document fragments
-            while (PageUtils.include(document));
-            window.afterInclude();
+        this.options = options;
+        this.active = false;
 
-            // Populate page with static values derived from Signal K server
-            PageUtils.walk(document, "signalk-static", element => {
-                var path = PageUtils.getAttributeValue(element, "data-signalk-path");
-                var filter = this.functionfactory.getFilter(PageUtils.getAttributeValue(element, "data-filter"));
-                super.interpolateValue(path, element, filter);
-            });
+        this.buildChannelButtonGroup(document.querySelector('#header'), this.options.channels);
+        this.buildOverrideButtonGroups(document.querySelector('#popup'), this.options.channels);
 
-            // Populate page with dynamic values derived from Signal K server
-            PageUtils.walk(document, "signalk-dynamic", element => {
-                var path = PageUtils.getAttributeValue(element, "data-signalk-path");
-                var filter = this.functionfactory.getFilter(PageUtils.getAttributeValue(element, "data-filter"));
-                super.registerCallback(path, function(v) { alert("Hello"); });
-            });
-
-            // Populate page with widgets
-            PageUtils.wildWalk(document, "widget-", element => {
-                if (element.hasAttribute("data-source")) this.localStorage.setAsAttributes(element.getAttribute("data-source"), element); 
-                if (element.hasAttribute("data-signalk-path")) {
-                    super.registerCallback(element.getAttribute("data-signalk-path"), Widget.createWidget(element, element.getAttribute("data-filter")));
-                    //super.getValue(element.getAttribute("data-signalk-path"), Widget.createWidget(element, element.getAttribute("data-filter")));
-                }
-            });
-
-            this.programmerInterface = ProgrammerInterface.create(document);
-            this.programmerInterface.addEventListener('click', '#saveas-button', function() { this.saveAsClicked(); }.bind(this));
-            this.programmerInterface.addEventListener('click', '.season-button', function() { this.seasonClicked(); }.bind(this));
-            this.programmerInterface.addEventListener('click', '.override-button', function(value) { this.overrideClicked(); }.bind(this));
-            this.programmerInterface.addEventListener('click', '.mode-button', function() { this.modeClicked(); }.bind(this));
-
-            controller.createCalendar(document.getElementById('calendar'));
-        });
-
+        Interface.addEventListener('.channel-button', 'click', function(target) { this.channelClicked(target); }.bind(this));
+        Interface.addEventListener('.mode-button', 'click', function(target) { this.modeClicked(target); }.bind(this));
+        //this.programmerInterface.addEventListener('click', '.override-button', function() { this.overrideClicked(); }.bind(this));
     }
 
-    connectionLost() {
-        if (confirm("Server connection lost! Reconnect?")) {
-            window.location = window.location;
+    activate(state) {
+        this.active = state;
+        if (this.active) {
+            [...document.getElementsByClassName('channel-mode')].forEach(e => e.classList.remove('hidden'));
+        } else {
+            [...document.getElementsByClassName('channel-mode')].forEach(e => e.classList.add('hidden'));
         }
     }
 
-    rightClick(e) {
-        alert("Hello");
+    buildChannelButtonGroup(container, channels) {
+        if (this.options.debug) console.log("Controller.buildChannelButtonGroup(%s,%s)...", container, channels);
+
+        if ((container) && (channels)) {
+            var leftElbow = document.createElement("div"); leftElbow.className = "lcars-elbow deep left-bottom";
+            container.appendChild(leftElbow);
+            channels.forEach(channel => {
+                var button = document.createElement("div");
+                button.id = channel.name + '-channel';
+                button.className = "lcars-bar lcars-u-1 w3-theme-d1 horizontal deep top button channel-button radio notification " + channel.name + " widget-indicator";
+                button.setAttribute("data-button-group", "channel-button");
+                button.setAttribute("data-button-value", channel.name);
+                button.setAttribute("data-signalk-path", channel.statePath);
+                button.setAttribute("data-icon-url", channel.iconUrl);
+                button.appendChild(document.createTextNode(channel.name.toUpperCase()));
+                var mode = document.createElement("div");
+                mode.id = channel.name + "-mode";
+                mode.className = "signalk-dynamic channel-mode";
+                mode.setAttribute("data-signalk-path", channel.modePath);
+                mode.setAttribute("data-filter", "notification-value");
+                button.appendChild(mode);
+                var next = document.createElement("div"); mode.classList.add("signalk-dynamic");
+                next.setAttribute("data-signalk-path", channel.nextPath);
+                next.setAttribute("data-filter", "notification-value");
+                button.appendChild(next);
+                container.appendChild(button);
+            });
+            var padding = document.createElement("div"); padding.className = "lcars-bar horizontal deep top";
+            container.appendChild(padding);
+            var rightElbow = document.createElement("div"); rightElbow.className = "lcars-elbow deep right-bottom";
+            container.appendChild(rightElbow);
+        }
     }
 
-    getCalendar() {
-        return(this.calendar);
+    buildOverrideButtonGroups(container, channels) {
+        if (this.options.debug) console.log("Controller.buildOverrideButtonGroups(%s,%s)...", container, channels);
+       
+        if ((container) && (channels)) {
+            channels.forEach(channel => {
+                if (channel.overrides.length) {
+                    var table = document.createElement("div");
+                    table.id = channel.name + "-override-button-group";
+                    table.className = "table hidden override-button-group";
+                    var row = document.createElement("div"); row.classList.add("table-row");
+                    channel.overrides.forEach(override => {
+                        var cell = document.createElement("div"); cell.classList.add("table-cell");
+                        var button = document.createElement("div");
+                        button.className = "btn button override-button radio notification " + override.name + " widget-indicator";
+                        button.setAttribute("data-button-value", override.name);
+                        button.setAttribute("data-signalk-path", override.path);
+                        button.appendChild(document.createTextNode(override.name.toUpperCase()));
+                        cell.appendChild(button);
+                        row.appendChild(cell);
+                    });
+                    table.appendChild(row);
+                    container.appendChild(table);
+                }
+            });
+        }
     }
 
-    getCalendarViewStartDate(controller) {
-        var d = controller.calendar.view.activeStart;
+    channelClicked(elem) {
+        if (this.options.debug) console.log("Controller.channelClicked(%s)...", elem);
+
+        if (this.active) {
+            var channel = Interface.processEvent(elem, 'on');
+            if (channel) {
+                var mode = document.getElementById(channel + "-mode").textContent.toLowerCase();
+                this.openModePanel(channel, mode);
+            } else {
+                this.closeModePanel();
+            }
+        }
+    }
+
+    openModePanel(channel, mode) {
+        if (this.options.debug) console.log("Controller.openModePanel(%s,%s)...", channel, mode);
+
+        document.getElementById('popup').classList.add('slide-in');
+        document.getElementById('popup').classList.remove('slide-out');
+        [...document.getElementsByClassName('mode-button')].forEach(e => e.classList.remove('on'));
+        document.querySelector('#popup #mode-button-' + mode).classList.add('on');
+    }
+
+    closeModePanel() {
+        if (this.options.debug) console.log("Controller.closeModePanel()...");
+
+        Interface.setState('channel-button', false);
+        document.getElementById('popup').classList.add('slide-out');
+        document.getElementById('popup').classList.remove('slide-in');
+    }
+
+    modeClicked(elem) {
+        if (this.options.debug) console.log("modeClicked(%s)...", elem);
+    
+        var mode = Interface.processEvent(elem, 'on');
+        if (mode) {
+            var channel = Interface.getSelectedValue('channel-button');
+            if (channel) {
+                this.options.client.setChannelMode(channel, mode);
+            }
+        }
+        this.closeModePanel();
     }
 
     overrideClicked() {
         if (this.options.debug) console.log("overrideClicked()...");
 
-        if (this.programmerInterface.getState(".override-button")) {
-            if (this.selectedOverride) document.getElementById("mode-button-group").classList.remove(this.selectedOverride);
-            this.selectedOverride = this.programmerInterface.getValue(".override-button");
-            document.getElementById("mode-button-group").classList.add(this.selectedOverride);
-            document.getElementById("mode-button-group").classList.remove("hidden");
-        } else {
-            this.programmerInterface.setState("override-button", false);
-            document.getElementById("mode-button-group").classList.remove(this.selectedOverride);
-            document.getElementById("mode-button-group").classList.add("hidden");
-            this.selectedOverride = null;
+        var override = this.programmerInterface.getValue('.override-button');
+        if (override) {
+            this.options.client.toggleOverride(override);
+            this.programmerInterface.setState('override-button', false);
         }
     }
-
-    modeClicked() {
-        if (this.options.debug) console.log("modeClicked()...");
-    
-        var channel = this.programmerInterface.getValue('.override-button');
-        var mode = this.programmerInterface.getValue('.mode-button');
-        console.log("Channel = %s, mode = %s", channel, mode);
-        switch (mode) {
-            case "on":
-                this.client.channelOn(channel);
-                break;
-            case "off":
-                this.client.channelOff(channel);
-                break;
-            case "auto":
-                this.client.channelAuto(channel);
-                break;
-            default:
-                break;
-        }
-        document.getElementById("mode-button-group").classList.remove(this.selectedOverride + "-override-button");
-        document.getElementById("mode-button-group").classList.add("hidden");
-        this.programmerInterface.setState('override-button', false);
-    }
-
-    seasonClicked() {
-        console.log("seasonClicked()...");
-        var season = controller.programmerInterface.getValue('season-button');
-        if (controller.programmerInterface.getState('saveas-button')) {
-            // Save the current events as a pattern for <season> 
-            var calendarEvents = controller.calendar.getEvents();
-            if (calendarEvents.length > 0) controller.client.saveSeason(season, calendarEvents);
-            controller.programmerInterface.setState('saveas-button', false);
-            document.getElementById('season-button-group').classList.remove('lcars-flash');
-        } else {
-            (controller.calendar.getEvents()).forEach(e => { e.remove(); });
-            var _controller = controller;
-            calendarEvents = controller.client.getEventsForSeason(season, controller.calendar.view.startDate , function(calendarEvents) {
-                if (calendarEvents) calendarEvents.forEach(e => _controller.calendar.addEvent(e));
-            });
-        }
-    }
-
-    saveAsClicked(controller) {
-        console.log("saveAsClicked(controller)...");
-        this.getCalendarViewStartDate(controller);
-        if (controller.programmerInterface.getState('saveas-button')) {
-            document.getElementById('season-button-group').classList.add('lcars-flash');
-        } else {
-            document.getElementById('season-button-group').classList.remove('lcars-flash');
-        }
-    }
-    
-    async createCalendar(node) {
-        if (node) {
-        await sleep(1000);
-        var _this = this;
-        this.calendar = new FullCalendar.Calendar(node, {
-            plugins: [ 'timeGrid', 'interaction', 'bootstrap' ],
-            events: function(req, suc, err) { Controller.getEvents(_this, req, suc, err); },
-            selectable: true,
-            unselectAuto: false,
-            defaultView: 'timeGridWeek',
-            firstDay: 1,
-            height: 400,
-            themeSystem: 'bootstrap',
-            header: { left: 'prev,next today', center: '', right: 'title' },
-            displayEventTime: false,
-            allDaySlot: false,
-            slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false, omitZeroMinute: false, meridiem: 'false' },
-            columnHeaderFormat: { weekday: 'short' },
-            select: function(info) { Controller.createCalendarEvent(_this, info); },
-            eventClick: function(info) { Controller.removeCalendarEvent(_this, info); }
-        });
-        this.calendar.render();
-        }
-    }
-
-    /**
-     * Return a collection of events for the currently displayed calendar week.
-     * This method is called by the calendar system each time it requires
-     * refreshed data.
-     *
-     * The method recovers the requested events from storage and returns them
-     * via successCallback.
-     */
-    static getEvents(controller, request, successCallback, failureCallback) {
-        console.log("getEvents(%s,%s,%s,%s)...", "controller", request, "successCallback", "failureCallback");
-        var _controller = controller;
-        var _start = request.start;
-        var _successCallback = successCallback;
-        if (controller.calendar) controller.calendar.getEvents().forEach(e => e.remove());
-        controller.client.getCurrentSeasonName(_start, function(seasonName) {
-            var _seasonName = seasonName;
-            controller.client.getEventsForWeek(_start, function(calendarEvents) {
-                if (calendarEvents) {
-                    _successCallback(calendarEvents);
-                } else {
-                    controller.client.getEventsForSeason(_seasonName, _start, function(calendarEvents) {
-                        if (calendarEvents) {
-                            _successCallback(calendarEvents);
-                        } else {
-                            _successCallback([]);
-                        }
-                    });
-                }
-            });
-        });
-    }
-
-    /**
-     * Create a new event when a calendar drag-drop operation completes.  The
-     * method is called by the calendar system with details of the new event
-     * passed via info.  A new event is created and written to storage and
-     * a call then made to refresh the calendar display.
-     */
-    static createCalendarEvent(controller, info) {
-        console.log("createCalendarEvent(%s,%s)...", controller, info);
-        var id = Date.now();
-        var channel = controller.programmerInterface.getValue('.channel-button');
-        console.log(channel);
-        var calendarEvent = ControllerClient.makeCalendarEvent(id, channel, info.start, info.end);
-        controller.client.saveEvent(calendarEvent);
-        controller.calendar.addEvent(calendarEvent);
-    }
-
-    static removeCalendarEvent(controller, info) {
-        console.log("removeCalendarEvent(%s,%s)...", controller, info);
-        controller.client.removeEvent(info.event);
-        info.event.remove();
-    }
-
 
 }

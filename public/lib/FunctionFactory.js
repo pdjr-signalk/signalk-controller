@@ -40,6 +40,15 @@ class FunctionFactory {
                                             }
                                         );
                                     },
+
+            "notification-value":   function(params) {
+                                        if ((typeof params === "string") && (params == "?")) return([]);
+                                        return(
+                                            function(v) {
+                                                return((v)?v.message:"");
+                                            }
+                                        );
+                                    },
     
             "identity":             function(params) {
                                         if ((typeof params === "string") && (params == "?")) return([]);

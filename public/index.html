@@ -4,25 +4,24 @@
 	<title>Environment controller</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
+	<script type="text/javascript" src="lib/Kellycolors.js"></script>
 	<script type="text/javascript" src="lib/SignalK.js"></script>
+	<script type="text/javascript" src="lib/SignalkController.js"></script>
 	<script type="text/javascript" src="lib/PageUtils.js"></script>
 	<script type="text/javascript" src="lib/FunctionFactory.js"></script>
 	<script type="text/javascript" src="lib/websocketR2.js"></script>
+	<script type="text/javascript" src="lib/Interface.js"></script>
 	<script type="text/javascript" src="lib/RemoteStorage.js"></script>
 	<script type="text/javascript" src="lib/ControllerClient.js"></script>
-	<script type="text/javascript" src="lib/Swipe.js"></script>
-	<script type="text/javascript" src="lib/ProgrammerInterface.js"></script>
 	<script type="text/javascript" src="lib/Controller.js"></script>
+	<script type="text/javascript" src="lib/Programmer.js"></script>
 	<script type="text/javascript" src="lib/Widget.js"></script>
 
    	<script src='lib/@fullcalendar/core/main.js'></script>
    	<script src='lib/@fullcalendar/daygrid/main.js'></script>
    	<script src='lib/@fullcalendar/timegrid/main.js'></script>
    	<script src='lib/@fullcalendar/interaction/main.js'></script>
-   	<script src='lib/@fullcalendar/bootstrap/main.js'></script>
-
-    <link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css' rel='stylesheet'>
-    <link rel="stylesheet" type="text/css" href='lib/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet' />
+   	<!-- <script src='lib/@fullcalendar/bootstrap/main.js'></script> -->
 
 	<link rel="stylesheet" type="text/css" href="css/style.css">
    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/core/main.css' />
@@ -30,19 +29,90 @@
    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/timegrid/main.css' />
    	<link rel="stylesheet" type="text/css" href='lib/@fullcalendar/bootstrap/main.css' />
 
-    <link rel="prev" title="Control Page" href="controller.html">
-    <link rel="next" title="Control Page" href="controller.html">
-
     <style>
+        html, body {
+            background: black;
+            border: 0;
+            margin: 0;
+            padding: 0;
+        }
+        p, h1, h2, h3 {
+            margin-top: 0;
+        }
+        pre {
+            display: inline;
+            white-space: pre-line;
+            word-wrap: break-word;
+        }
+
         .fc-today {
             background: #0f0f0f !important;
         }
 
-        .heating { background: #7f3f3f; }
-        .water { background: #3f3f7f; }
-        .ensuite { background: #7f7f3f; }
-        .dayhead { background: #7f3f7f; }
-        .on { color: white; font-weight: bold; border: yellow; }
+        #popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            background: #3949a3;
+            padding: 10px 20px 10px 20px;
+            border-radius: 20px;
+            z-index: 5;
+        }
+
+        .slide-in {
+            animation: slide-in 0.5s forwards;
+        }
+
+        .slide-out {
+            animation: slide-out 0.5s forwards;
+        }
+
+        .programme-indicator {
+            width: 50%;
+            height: 25%;
+            border: 3px;
+            position: absolute;
+            left: 25%;
+        }
+        .programme-indicator.selected {
+            border-bottom: 5px red solid;
+        }
+
+        @keyframes slide-in {
+            0% { opacity: 0; transform: translate(-200%, -50%); }
+            33% { opacity: 0; }
+            100% { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        @keyframes slide-out {
+            0% { opacity: 1; transform: translate(-50%, -50%); }
+            66% { opacity: 0; }
+            100% { opacity: 0; transform: translate(-200%, -50%); }
+        }
+
+        .lcars-bar::first-line {
+            line-height: 40px !important;
+        }
+
+        .signalk-dynamic {
+            pointer-events: none;
+        }
+
+        #container: {
+            position: relative;
+        }
+
+        #calendar {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            transform: translate(-50%,-50%);
+            z-index: 3;
+        }
+
+        .widget-indicator-on::first-line { color: orange !important; }
 
         .programme {
             height: 400px;
@@ -51,29 +121,42 @@
         .hidden {
             display: none;
         }
+
     </style>
     <script>
-        function afterInclude() {
-            //controller.createCalendar(document.getElementById('calendar'));
-            new Swipe('pagecontent', null, { rightButton: "swipefallback" });
-        }
-
         function noRightClick(contextHandler) {
             document.addEventListener("contextmenu", (e) => { e.preventDefault(); });
             window.event.cancelBubble = true;
         }
-    
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
     </script>
 </head>
-<body onload="noRightClick(); controller = Controller.create({ host: '192.168.1.1', port: 9000, debug: true });">
-    <div data-include="config.html"></div>
-    <div id="pagecontent">
-        <div data-include="includes/controller.html"></div>
-        <div data-include="includes/programmer.html"></div>
+<body onload="noRightClick(); SignalkController.create({ host: '192.168.1.1', signalkPort: 3000, controllerPort: 9000, debug: true });">
+    <div class="lcars-app-container">
+        <div id="header" class="lcars-row">
+        </div>
+        <div id="left-menu" class="lcars-column start-space lcars-u-1">
+            <div class="lcars-bar lcars-u-1-1"></div>
+            <div id="app-mode-button" class="lcars-bar lcars-u-1-1 button">PROGRAMME</div>
+            <div class="lcars-bar"></div>
+        </div>
+        <div id="footer" class="lcars-row footer">
+            <div class="lcars-elbow left-top"></div>
+            <div class="lcars-bar horizontal bottom"></div>
+            <div class="lcars-elbow right-top"></div>
+        </div>
+        <div id="container" class="lcars-row" style="overflow: hidden;">
+            <div id="calendar"></div>
+        </div>
+    </div>
+    <div id="popup" class="slide-out">
+        <div data-include="includes/mode-button-group.html"></div>
     </div>
 </body>
 </html>
+
+
+
+
+
+
 

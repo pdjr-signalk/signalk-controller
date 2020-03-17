@@ -19,126 +19,117 @@ class ControllerClient {
     constructor(options) {
         if (options.debug) console.log("ControllerClient(%s)...", JSON.stringify(options));
 
+        if (!options.server) throw "ControllerClient: controller server hostname must be specified (options.server)";
+        if (!options.port) throw "ControllerClient: controller server port number must be specified (options.port)";
+        if (!options.debug) options.debug = false;
+
         this.options = options;
-        this.ws = new WebSocketR2(this.options.server); 
+        this.ws = new WebSocketR2("ws://" + this.options.server + ":" + this.options.port); 
+        this.wsIsOpen = false;
+
+        this.ws.onopen(function() { this.wsIsOpen = true; }.bind(this));
     }
 
-    start() {
-        if (this.options.debug) console.log("ControllerClient.start()...");
+    waitForConnection(timeout=500) {
+        if (this.options.debug) console.log("ControllerClient.waitForConnection(%s)...", timeout);
 
-        this.ws.send({ action: "start", params: {} });
+        const poll = resolve => {
+            if (this.wsIsOpen) { resolve(); } else { setTimeout(_ => poll(resolve), timeout); }
+        }
+        return new Promise(poll);
     }
 
-    stop() {
-        if (this.options.debug) console.log("ControllerClient.stop()...");
+    getChannelsInGroup(group, callback) {
+        if (this.options.debug) console.log("ControllerClient.getChannelsInGroup(%s,%s)...", group, callback);
 
-        this.ws.send({ action: "stop", params: {} });
+        this.ws.send({ action: "getChannelsInGroup", params: { group: group }}, function(message) {
+            var channels = message.data.value;
+            callback(channels);
+        }.bind(this));
     }
 
-    restart() {
-        if (this.options.debug) console.log("ControllerClient.restart()...");
+    setChannelMode(channel, mode) {
+        if (this.options.debug) console.log("ControllerClient.setChannelMode(%s,%s)...", channel, mode);
 
-        this.ws.send({ action: "restart", params: {} });
+        this.ws.send({ action: "setChannelMode", params: { channel: channel, mode: mode } });
     }
 
-    channelOn(channel) {
-        if (this.options.debug) console.log("ControllerClient.channelOn(%s)...", channel);
+    toggleOverride(override) {
+        if (this.options.debug) console.log("ControllerClient.toggleOverride(%s)...", override);
 
-        this.ws.send({ action: "channelOn", params: { channel: channel } });
-    }
-
-    channelOff(channel) {
-        if (this.options.debug) console.log("ControllerClient.channelOff(%s)...", channel);
-
-        this.ws.send({ action: "channelOff", params: { channel: channel } });
-    }
-
-    channelAuto(channel) {
-        if (this.options.debug) console.log("ControllerClient.channelAuto(%s)...", channel);
-
-        this.ws.send({ action: "channelAuto", params: { channel: channel } });
-    }
-
-    channelOverride(channel) {
-        if (this.options.debug) console.log("ControllerClient.channelOverride(%s)...", channel);
-
-        this.ws.send({ action: "channelOverride", params: { channel: channel } });
+        this.ws.send({ action: "toggleOverride", params: { override: override } });
     }
 
     saveEvent(calendarEvent) {
-        if (this.options.debug) console.log("ControllerClient.saveEvent(%s)...", JSON.stringify(calendarEvent));
+        if (this.options.debug) console.log("ControllerClient.saveEvent(%s)...", calendarEvent);
 
-        this.ws.send({ action: "saveEvent", params: { e: ControllerClient.calendarEventToEvent(calendarEvent) }});
+        this.ws.send({ action: "saveEvent", params: { e: this.calendarEventToEvent(calendarEvent) }});
     }
 
     removeEvent(calendarEvent) {
         if (this.options.debug) console.log("ControllerClient.removeEvent(%s)...", calendarEvent);
 
-        this.ws.send({ action: "removeEvent", params: { e: ControllerClient.calendarEventToEvent(calendarEvent) }});
+        this.ws.send({ action: "removeEvent", params: { e: this.calendarEventToEvent(calendarEvent) }});
     }
 
     getEventsForWeek(date, callback) {
         if (this.options.debug) console.log("ControllerClient.getEventsForWeek(%s,%s)...", date, callback);
 
-        var _callback = callback;
         this.ws.send({ action: "getEventsForWeek", params: { date: date }}, function(message) {
             var events = message.data.value;
-            var calendarEvents = (events)?events.map(e => ControllerClient.eventToCalendarEvent(e)):null;
-            _callback(calendarEvents);
-        });
+            var calendarEvents = (events)?events.map(e => this.eventToCalendarEvent(e)):null;
+            callback(calendarEvents);
+        }.bind(this));
     }
 
     getEventsForSeason(season, date, callback) {
         if (this.options.debug) console.log("ControllerClient.getEventsForSeason(%s,%s,%s)...", season, date, callback);
 
-        var _callback = callback;
         this.ws.send({ action: "getEventsForSeason", params: { season: season, date: date }}, function(message) {
             var events = message.data.value;
-            var calendarEvents = (events)?events.map(e => ControllerClient.eventToCalendarEvent(e)):null;
-            _callback(calendarEvents);
-        });
+            var calendarEvents = (events)?events.map(e => this.eventToCalendarEvent(e)):null;
+            callback(calendarEvents);
+        }.bind(this));
     }
 
     saveSeason(season, calendarEvents) {
         if (this.options.debug) console.log("ControllerClient.saveSeason(%s,%s)...", season, calendarEvents);
 
-        var events = calendarEvents.map(e => ControllerClient.calendarEventToEvent(e));
+        var events = calendarEvents.map(e => this.calendarEventToEvent(e));
         this.ws.send({ action: "saveSeason", params: { season: season, events: events }});
     }
 
     getCurrentSeasonName(date, callback) {
         if (this.options.debug) console.log("ControllerClient.getCurrentSeasonName(%s,%s)...", date, callback);
 
-        var _callback = callback;
         this.ws.send({ action: "getCurrentSeasonName", params: { date: date }}, function(message) {
             var seasonName = message.data.value;
-            _callback(seasonName);
-        });
+            callback(seasonName);
+        }.bind(this));
     }
 
     getSeasonNames(callback) {
         if (this.options.debug) console.log("ControllerClient.getSeasonNames(%s)...", callback);
 
-        var _callback = callback;
         this.ws.send({ action: "getSeasonNames", params: {}}, function(message) {
-            var seasons = message.data.value;
-            _callback(seasons);
-        });
+            var seasonNames = message.data.value;
+            callback(seasonNames);
+        }.bind(this));
     }
     
-    static eventToCalendarEvent(e) {
+    eventToCalendarEvent(e) {
         return({ id: e.id, start: e.start, end: e.end, extendedProps: { channel: e.channel }, classNames: [ e.channel ]});
     }
 
-    static calendarEventToEvent(e) {
-        return(ControllerClient.makeEvent(e.id, e.extendedProps.channel, e.start, e.end));
+    calendarEventToEvent(e) {
+        return(this.makeEvent(e.id, e.extendedProps.channel, e.start, e.end));
     }
 
-    static makeCalendarEvent(id, channel, start, end) {
-        return(ControllerClient.eventToCalendarEvent(ControllerClient.makeEvent(id, channel, start, end)));
+    makeCalendarEvent(id, channel, start, end) {
+        return(this.eventToCalendarEvent(this.makeEvent(id, channel, start, end)));
     }
 
-    static makeEvent(id, channel, start, end) {
+    makeEvent(id, channel, start, end) {
         return({ id: id, channel: channel, start: start, end: end });
     }
 

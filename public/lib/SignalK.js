@@ -186,7 +186,7 @@ class SignalK {
     registerInterpolation(path, element, filter, callbackFilter) {
         //console.log("registerInterpolation(%s,%s,%s,%s)...", path, element, filter, callbackFilter);
  
-        this.registerCallback(path, function(v) { element.innerHTML = (filter !== undefined)?filter(v):v; }, callbackFilter);
+        this.registerCallback(path, function(v) { element.innerHTML = (filter)?filter(v):v; }, callbackFilter);
     }
 
     getValue(path, callback, filter) {
