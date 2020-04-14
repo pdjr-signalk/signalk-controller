@@ -154,7 +154,6 @@ class Programmer {
             var color = this.options.channels.reduce((a,c) => { return((c.name == e.extendedProps.channel)?c.color.name:a); }, 'red');
             e.classNames.push(color);
         });
-        console.log(JSON.stringify(events));
         return(events);
     }
 

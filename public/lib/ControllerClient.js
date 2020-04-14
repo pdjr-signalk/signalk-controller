@@ -118,7 +118,12 @@ class ControllerClient {
     }
     
     eventToCalendarEvent(e) {
-        return({ id: e.id, start: e.start, end: e.end, extendedProps: { channel: e.channel }, classNames: [ e.channel ]});
+        var retval = { id: e.id, start: e.start, end: e.end, extendedProps: { channel: e.channel }, classNames: [ e.channel ] };
+        if (e.seasonEvent) {
+            retval.extendedProps.seasonEvent = true;
+            retval.classNames.push('season-event');
+        }
+        return(retval);
     }
 
     calendarEventToEvent(e) {

@@ -5,9 +5,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 	<script type="text/javascript" src="lib/Kellycolors.js"></script>
-	<script type="text/javascript" src="lib/SignalK.js"></script>
+	<script type="text/javascript" src="lib/signalk-client/SignalkClient.js"></script>
 	<script type="text/javascript" src="lib/SignalkController.js"></script>
-	<script type="text/javascript" src="lib/PageUtils.js"></script>
+	<script type="text/javascript" src="lib/page-utils/PageUtils.js"></script>
 	<script type="text/javascript" src="lib/FunctionFactory.js"></script>
 	<script type="text/javascript" src="lib/websocketR2.js"></script>
 	<script type="text/javascript" src="lib/Interface.js"></script>
@@ -122,15 +122,13 @@
             display: none;
         }
 
-    </style>
-    <script>
-        function noRightClick(contextHandler) {
-            document.addEventListener("contextmenu", (e) => { e.preventDefault(); });
-            window.event.cancelBubble = true;
+        .season-event {
+            border: 1px solid red;
         }
-    </script>
+
+    </style>
 </head>
-<body onload="noRightClick(); SignalkController.create({ host: '192.168.1.1', signalkPort: 3000, controllerPort: 9000, debug: true });">
+<body onload="PageUtils.noRightClick(); Controller.create({ signalkHost: '192.168.1.1', signalkPort: 3000 });">
     <div class="lcars-app-container">
         <div id="header" class="lcars-row">
         </div>
