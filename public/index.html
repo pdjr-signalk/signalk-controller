@@ -7,13 +7,13 @@
 	<script type="text/javascript" src="lib/Kellycolors.js"></script>
 	<script type="text/javascript" src="lib/signalk-client/SignalkClient.js"></script>
 	<script type="text/javascript" src="lib/SignalkController.js"></script>
+	<script type="text/javascript" src="lib/Controller.js"></script>
 	<script type="text/javascript" src="lib/page-utils/PageUtils.js"></script>
 	<script type="text/javascript" src="lib/FunctionFactory.js"></script>
 	<script type="text/javascript" src="lib/websocketR2.js"></script>
 	<script type="text/javascript" src="lib/Interface.js"></script>
 	<script type="text/javascript" src="lib/RemoteStorage.js"></script>
 	<script type="text/javascript" src="lib/ControllerClient.js"></script>
-	<script type="text/javascript" src="lib/Controller.js"></script>
 	<script type="text/javascript" src="lib/Programmer.js"></script>
 	<script type="text/javascript" src="lib/Widget.js"></script>
 
@@ -128,7 +128,7 @@
 
     </style>
 </head>
-<body onload="PageUtils.noRightClick(); Controller.create({ signalkHost: '192.168.1.1', signalkPort: 3000 });">
+<body onload="PageUtils.noRightClick(); SignalkController.create({ server: '192.168.1.1', port: 3000 });">
     <div class="lcars-app-container">
         <div id="header" class="lcars-row">
         </div>
