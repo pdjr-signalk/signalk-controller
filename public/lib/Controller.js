@@ -110,7 +110,7 @@ class Controller {
     }
 
     openModePanel(channel, mode) {
-        if (this.options.debug) console.log("Controller.openModePanel(%s,%s)...", channel, mode);
+        /*if (this.options.debug)*/ console.log("Controller.openModePanel(%s,%s)...", channel, mode);
 
         document.getElementById('popup').classList.add('slide-in');
         document.getElementById('popup').classList.remove('slide-out');

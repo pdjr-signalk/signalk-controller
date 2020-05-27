@@ -39,7 +39,7 @@ class SignalkController {
             this.flags = { pageReady: false };
 
             // Keep loading fragments until there's nothing left to load...
-            while (PageUtils.walk(container, "[data-include]", element => {
+            while (PageUtils.walk(document, "[data-include]", element => {
                 PageUtils.include(element, element.getAttribute('data-include'));
                 element.removeAttribute('data-include');
             }));
