@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-const Schema = require("./lib/Schema.js");
-const Log = require("./lib/Log.js");
-const Notification = require('./lib/Notification.js');
+const Schema = require("./lib/signalk-libschema/Schema.js");
+const Log = require("./lib/signalk-liblog/Log.js");
+const Notification = require('./lib/signalk-libnotification/Notification.js');
 
 const Controller = require("./lib/Controller.js");
 const ControllerServer = require("./lib/ControllerServer.js");
 
 const PLUGIN_SCHEMA_FILE = __dirname + "/schema.json";
 const PLUGIN_UISCHEMA_FILE = __dirname + "/uischema.json";
-const DEBUG = true;
+const DEBUG = false;
 
 module.exports = function(app) {
 	var plugin = {};
@@ -32,7 +32,8 @@ module.exports = function(app) {
 	plugin.name = "Environment controller";
 	plugin.description = "Environmet controller with SignalK notification output";
 
-    const log = new Log({ prefix: plugin.id, statusCallback: app.setProviderStatus, errorCallback: app.setProviderError });
+    const log = new Log(app.setProviderStatus, app.setProviderError, plugin.id);
+    const notification = new Notification(app.handleMessage, plugin.id);
 
 	plugin.schema = function() {
         if (DEBUG) log.N("plugin.schema()...", false);
@@ -59,8 +60,8 @@ module.exports = function(app) {
                 const controller = new Controller({
                     storage: storage,
                     channels: options.database.channels,
-                    issueNotificationCallback: function(key, state, message) { Notification.issueNotification(app, plugin.id, key, state, message); },
-                    cancelNotificationCallback: function(key) { Notification.cancelNotification(app, plugin.id, key); },
+                    issueNotificationCallback: function(key, state, message) { notification.issue(key, message, { "state": state }); },
+                    cancelNotificationCallback: function(key) { notification.cancel(key); },
                     debug: DEBUG
                 });
 
