@@ -33,7 +33,7 @@ module.exports = function(app) {
 	plugin.description = "Environmet controller with SignalK notification output";
 
     const log = new Log(app.setProviderStatus, app.setProviderError, plugin.id);
-    const notification = new Notification(app.handleMessage, plugin.id);
+    const notification = new Notification(app, plugin.id);
 
 	plugin.schema = function() {
         if (DEBUG) log.N("plugin.schema()...", false);

@@ -115,7 +115,8 @@ class Controller {
         document.getElementById('popup').classList.add('slide-in');
         document.getElementById('popup').classList.remove('slide-out');
         [...document.getElementsByClassName('mode-button')].forEach(e => e.classList.remove('on'));
-        document.querySelector('#popup #mode-button-' + mode).classList.add('on');
+        var selected = document.querySelector('#popup #mode-button-' + mode);
+        if (selected) selected.classList.add('on');
     }
 
     closeModePanel() {
