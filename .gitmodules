@@ -7,3 +7,9 @@
 [submodule "lib/signalk-libnotification"]
 	path = lib/signalk-libnotification
 	url = https://github.com/preeve9534/signalk-libnotification.git
+[submodule "public/lib/page-utils"]
+	path = public/lib/page-utils
+	url = https://github.com/preeve9534/page-utils
+[submodule "public/lib/signalk-libsignalkclient"]
+	path = public/lib/signalk-libsignalkclient
+	url = https://github.com/preeve9534/signalk-libsignalkclient
